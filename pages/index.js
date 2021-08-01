@@ -122,7 +122,7 @@ export default class Home extends Component {
               </div>
               <div>
                 <h2>Just tell me the features already!</h2>
-                <p>Well, here's just a few:</p>
+                <p>Well, here&apos;s just a few:</p>
                 <div style={{display: "flex", flexDirection: "row", justifyContent: "space-evenly", textAlign: "center"}}>
                   <div>
                     <div style={{display: "flex", flexDirection: "column"}}>
