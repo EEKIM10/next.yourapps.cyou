@@ -16,7 +16,7 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
-    fetch("http://localhost:3000/api/stats").then(
+    fetch(document.location.origin + "/api/stats").then(
         r=>r.json().then(j=> {
           statsData = j;
           this.setState(statsData)
