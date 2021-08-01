@@ -1,0 +1,23 @@
+footer.mainFooter {
+    padding: 4rem;
+    margin: 4rem 0 0;
+    background-color: #23272A;
+    color: #dadddd;
+    box-shadow: 0 -3px 13px 2px #23272AAA;
+}
+
+div.flexRow {
+    display: flex;
+    flex-direction: row;
+    color: #f00
+}
+
+div.flexColumn {
+    display: flex;
+    flex-direction: column;
+    color: #0f0
+}
+
+a.social {
+    padding-right: 1rem;
+}
