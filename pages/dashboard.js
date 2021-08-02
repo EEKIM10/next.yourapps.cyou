@@ -89,7 +89,7 @@ function Guild(props) {
         uri += ".webp";
     }
     return (
-        <a onClick={} title={props.guild.name}>
+        <a href={"#"+props.guild.id} title={props.guild.name}>
             <Image src={uri} alt={props.guild.name} width={"64px"} height={"64px"} placeholder={"blur"} blurDataURL={placeholder} style={{borderRadius: "50%"}}/>
         </a>
     )
@@ -120,7 +120,7 @@ class ServerSelection extends Component {
         }
         return (
             <div id={"guilds"}>
-                {legal.map((g)=>{return <Guild guild={g}/>})}
+                {legal.map((g)=>{return <Guild key={g.id} guild={g}/>})}
             </div>
         )
     }

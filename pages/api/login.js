@@ -7,4 +7,4 @@ if(process.env.DEV==="true") {
 }
 
 // console.log("Redirect URI: %c"+uri, "color:cyan;font-weight:900")
-export default (req, res) => {res.status(307).setHeader("Location", uri).send()}
+export default function handle(req, res) {res.status(307).setHeader("Location", uri).send()}

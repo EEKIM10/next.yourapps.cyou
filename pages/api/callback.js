@@ -1,7 +1,7 @@
 import {select, insert_raw} from "../../utils/db";
 import FormData from "form-data";
 
-export default async (req, res) => {
+export default async function handle(req, res) {
     const code = req.query.code;
     if(!code) {
         res.status(307).setHeader("Location", "/api/login").send();
