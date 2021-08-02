@@ -8,11 +8,27 @@ import Footer from "../public/components/footer";
 
 let statsData = {guilds: "loading", "users": "loading", "positions": "loading", "commands": "loading"};
 
+function convertCookies(cookie) {
+  let output = {};
+  cookie.split(/\s*;\s*/).forEach(function(pair) {
+    pair = pair.split(/\s*=\s*/);
+    output[pair[0]] = pair.splice(1).join('=');
+  });
+  return output
+}
+
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = statsData
+  }
+
+  async getServerSideProps(ctx) {
+    console.log("Cookies: " + JSON.stringify(convertCookies(ctx.req.cookies)))
+    return {
+      cookies: convertCookies(ctx.req.cookies)
+    }
   }
 
   componentDidMount() {
@@ -22,6 +38,7 @@ export default class Home extends Component {
           this.setState(statsData)
         })
     ).catch()
+    console.log("Props: " + JSON.stringify(this.props))
   }
 
   render() {
@@ -53,10 +70,10 @@ export default class Home extends Component {
                 </span>
               </div>
             </div>
-            <Nav cookies={{"session": "foo"}}/>
+            <Nav/>
             <div style={{textAlign: "center"}}>
               <h1 style={{textAlign: "center"}}>YourApps</h1>
-              <Image src={avatar} alt={""} width={"128px"} height={"128px"}/>
+              <Image src={avatar} alt={""} width={"128px"} height={"128px"} placeholder={"blur"}/>
               <p><strong>{this.state.guilds.toLocaleString()}</strong> Servers!</p>
               <div style={{display: "flex",flexDirection:"row",justifyContent: "space-evenly",alignContent:"center",alignItems:"center"}}>
                 <a href={"https://yourapps.cyou/invite?ref=index-top-new"}>

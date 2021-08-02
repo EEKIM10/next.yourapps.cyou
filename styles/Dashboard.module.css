@@ -1,0 +1,22 @@
+@keyframes loading {
+    from {transform: rotate(0deg)}
+    to {transform: rotate(360deg)}
+}
+
+.loaderParent {
+    background-color: #23272A;
+    border-radius: 20px;
+    padding: 2rem;
+    width: 64px;
+    height: 64px;
+    display: inline-flex;
+}
+
+.loader {
+    border-radius: 50%;
+    border: 12px solid #425085;
+    border-top: 12px solid #7289DA;
+    animation: loading 1s linear infinite;
+    width: 64px;
+    height: 64px
+}

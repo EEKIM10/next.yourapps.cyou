@@ -7,6 +7,7 @@ nav.mainNav {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
 }
 
 div.navBoxLeft {
@@ -19,6 +20,7 @@ div.navBoxRight {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
+    align-items: baseline;
 }
 
 div.spacedBox {

@@ -1,3 +1,6 @@
+console.log("loading .env")
+require("dotenv").config()
+console.log("loaded .env")
 module.exports = {
   reactStrictMode: true,
   images: {
