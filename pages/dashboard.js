@@ -1,10 +1,11 @@
 import {Component} from "react";
 import Image from "next/image";
 import styles from '../styles/Dashboard.module.css';
+import Head from "next/head";
 
 
 const placeholder = (
-    "iVBORw0KGgoAAAANSUhEUgAABQAAAALQCAIAAAE3GHqXAAAABGdBTUEAALGPC/xhBQAAAYVpQ0NQSUNDIHByb2ZpbGUAACiRfZE9SMNQFIVPW6VF" +
+    "data:image/png,base64;iVBORw0KGgoAAAANSUhEUgAABQAAAALQCAIAAAE3GHqXAAAABGdBTUEAALGPC/xhBQAAAYVpQ0NQSUNDIHByb2ZpbGUAACiRfZE9SMNQFIVPW6VF" +
     "WhzaQcQhQ3WyKCriqFUoQoVQK7TqYPLSP2jSkKS4OAquBQd/FqsOLs66OrgKguAPiJubk6KLlHhfUmgR44XH+zjvnsN79wH+ZpWpZs84oGqWkUkl" +
     "hVx+VQi+IgQfoohgTGKmPieKaXjW1z31Ut0leJZ3358VUQomA3wC8SzTDYt4g3h609I57xPHWFlSiM+JRw26IPEj12WX3ziXHPbzzJiRzcwTx4iF" +
     "UhfLXczKhko8RRxXVI3y/TmXFc5bnNVqnbXvyV8YLmgry1ynNYQUFrEEEQJk1FFBFRYStGukmMjQedLDP+j4RXLJ5KqAkWMBNaiQHD/4H/yerVmcn" +
@@ -89,8 +90,9 @@ function Guild(props) {
         uri += ".webp";
     }
     return (
-        <a href={"#"+props.guild.id} title={props.guild.name}>
-            <Image src={uri} alt={props.guild.name} width={"64px"} height={"64px"} placeholder={"blur"} blurDataURL={placeholder} style={{borderRadius: "50%"}}/>
+        <a href={"#"+props.guild.id} title={props.guild.name} style={{margin: "4px", borderRadius: "50%"}} id={props.guild.id}>
+            <Image src={uri} alt={props.guild.name} placeholder={"blur"} blurDataURL={placeholder} className={styles.avatar}
+            onClick={()=>{document.getElementById(props.guild.id).parentElement.remove()}} width={"64px"} height={"64px"}/>
         </a>
     )
 }
@@ -127,15 +129,55 @@ class ServerSelection extends Component {
 }
 
 
-export default class Dashboard extends Component {
+class DashboardUI extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            metaData: {},
+            serverData: {}
+        }
+    }
+
+    async componentDidMount() {
+        const response = await fetch(
+            "/api/guild?id=" + this.props.guild.id,
+
+        )
+    }
+
     render() {
         return (
-            <main>
-                <Loader width={"64px"} height={"64px"}/>
-                <div style={{display: "flex"}}>
-                    <ServerSelection/>
-                </div>
-            </main>
+            <div className={styles.column}>
+                <h3>{this.state.metaData.name}</h3>
+            </div>
         )
+    }
+}
+
+
+export default class Dashboard extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            selected: null
+        }
+    }
+    render() {
+        if(!this.state.selected) {
+            return (
+                <main>
+                    <Head>
+                        <title>Dashboard - Select Server</title>
+                    </Head>
+                    <Loader width={"64px"} height={"64px"}/>
+                    <h1 style={{textAlign: "center"}}>Select A Server</h1>
+                    <div style={{display: "flex", justifyContent: "center", alignItems: "baseline", textAlign: "center"}}>
+                        <div style={{width: "50%"}}>
+                            <ServerSelection/>
+                        </div>
+                    </div>
+                </main>
+            )
+        }
     }
 }

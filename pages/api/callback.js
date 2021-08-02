@@ -31,13 +31,13 @@ export default async function handle(req, res) {
     let token;
     // noinspection JSUnresolvedVariable
     if(!await select("SELECT key FROM tokens WHERE value=?;", [data.access_token])) {
-        token = Math.random().toString(16).replace(/[^a-z]+/g, '').substr(2,14)
+        token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         console.log("Token: %c" + token, "font-weight: 900");
         console.log("Access: %c" + data.access_token, "font-weight: 900")
-        await insert_raw("INSERT INTO tokens (key, value) VALUES (:token, :access);", {token: token, access: data.access_token});
+        await insert_raw("INSERT INTO tokens (key, value) VALUES (?, ?);", [token, data.access_token]);
     }
     else {
-        token = (await select("SELECT key FROM tokens WHERE value=?", [data.access_token]))
+        token = (await select("SELECT key FROM tokens WHERE value=?", [data.access_token])).key
     }
     res.status(307).setHeader(
         "Set-Cookie",

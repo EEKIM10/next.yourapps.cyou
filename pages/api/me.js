@@ -19,19 +19,17 @@ export default async function handle(req, res) {
         )
     }
     else {
-
-        console.debug("Our cookie: " + cookieData)
         const response = await fetch(
             "https://discord.com/api/v9/users/@me",
             {
                 headers: {
-                    authorization: "Bearer " + cookieData.id
+                    authorization: "Bearer " + cookieData.value
                 }
             }
         )
         if(!response.ok) {
             console.error(`Failed to fetch me: got ${response.statusText}.`);
-            res.status(response.status).text(await response.text());
+            res.status(response.status).json(await response.text());
             return;
         }
         const _data = await response.json();

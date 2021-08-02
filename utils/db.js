@@ -12,7 +12,7 @@ export async function ensure_db() {
                 driver: sqlite3.Database
             }
         )
-        await db.exec(
+        await db.run(
             "CREATE TABLE IF NOT EXISTS tokens (key TEXT PRIMARY KEY NOT NULL, value TEXT NOT NULL);"
         )
     }
@@ -25,7 +25,7 @@ export async function select(text, args) {
 
 export async function insert_raw(text, args) {
     await ensure_db();
-    return await db.exec(text, args)
+    return await db.run(text, args)
 }
 
 export async function close() {

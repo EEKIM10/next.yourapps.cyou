@@ -20,3 +20,21 @@
     width: 64px;
     height: 64px
 }
+
+.avatar {
+    border-radius: 50%;
+    transition-property: all;
+    transition-duration: 1s;
+}
+
+.avatar:hover {
+    border-radius: 0;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+    background-color: #99AAB5;
+    height: 100%;
+}

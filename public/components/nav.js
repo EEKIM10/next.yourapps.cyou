@@ -17,7 +17,6 @@ class UserCard extends Component {
         try {this.cookies = document.cookie.match("session=(?<session>[a-zA-Z0-9]+)").groups}
         catch {this.cookies = {session: null}}
         if(this.cookies.session) {
-            console.log("Cookie is %c$".replace("$", this.cookies.session), "color:green")
             let response;
             try {
                 response = await fetch(
@@ -33,7 +32,6 @@ class UserCard extends Component {
                 response = {status: 0}
             }
             if(response.status!==200) {
-                console.error("Failed to fetch user.")
                 this.setState({
                         username: "log in",
                         avatar_url: "https://cdn.discordapp.com/embed/avatars/0.png?size=64",
@@ -64,7 +62,6 @@ class UserCard extends Component {
             }
         }
         else {
-            console.log("%cUser has no cookie.", "color:red")
             this.setState({
                 username: "log in",
                     avatar_url: "https://cdn.discordapp.com/embed/avatars/0.png",
@@ -92,7 +89,7 @@ class UserCard extends Component {
             <div className={styles.spacedBox}>
                 <a href={href}>
                     <div>
-                        <Image src={this.state.avatar_url} width={"16px"} height={"16px"}/>
+                        <Image src={this.state.avatar_url} width={"32px"} height={"32px"}/>
                         <span title={"Dashboard"} style={{paddingLeft: "4px", fontSize: "18px"}}>{this.state.username}</span>
                     </div>
                 </a>

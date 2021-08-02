@@ -1,11 +1,15 @@
 import '../styles/globals.css'
-
-export function reportWebVitals(metric) {
-  console.log("Metrics: ", metric)
-}
+import Nav from "../public/components/nav";
+import Footer from "../public/components/footer";
 
 function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+  return (
+      <>
+        <Nav/>
+        <Component {...pageProps} />
+        <Footer/>
+      </>
+  )
 }
 
 export default MyApp

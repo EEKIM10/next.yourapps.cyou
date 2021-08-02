@@ -5,6 +5,7 @@ import {Component} from "react";
 import avatar from '../public/avatar.png';
 import Nav from "../public/components/nav";
 import Footer from "../public/components/footer";
+import placeholder from '../public/placeholder.png'
 
 let statsData = {guilds: "loading", "users": "loading", "positions": "loading", "commands": "loading"};
 
@@ -18,6 +19,29 @@ function convertCookies(cookie) {
 }
 
 
+class VideoComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {render: false}
+  }
+
+  componentDidMount() {
+    this.setState({render: true})
+  }
+
+  render() {
+    if(this.state.render) {
+      return (
+          <video width={"60%"} height={"40%"} style={{"margin": "0", "padding": "0"}} loop autoPlay={true}>
+            <source type={"video/mp4"} src={"/examples/create-app.mp4"}/>
+          </video>
+      );
+    }
+    return <Image src={placeholder} width={"60%"} height={"40%"} style={{"margin": "0", "padding": "0"}} alt={"loading video..."}/>
+  }
+}
+
+
 export default class Home extends Component {
   constructor(props) {
     super(props);
@@ -25,7 +49,6 @@ export default class Home extends Component {
   }
 
   async getServerSideProps(ctx) {
-    console.log("Cookies: " + JSON.stringify(convertCookies(ctx.req.cookies)))
     return {
       cookies: convertCookies(ctx.req.cookies)
     }
@@ -38,7 +61,6 @@ export default class Home extends Component {
           this.setState(statsData)
         })
     ).catch()
-    console.log("Props: " + JSON.stringify(this.props))
   }
 
   render() {
@@ -70,7 +92,6 @@ export default class Home extends Component {
                 </span>
               </div>
             </div>
-            <Nav/>
             <div style={{textAlign: "center"}}>
               <h1 style={{textAlign: "center"}}>YourApps</h1>
               <Image src={avatar} alt={""} width={"128px"} height={"128px"} placeholder={"blur"}/>
@@ -108,9 +129,7 @@ export default class Home extends Component {
                 <p>The easy setup means you can get your applications ready to go in a matter of minutes!</p>
                 <div style={{textAlign: "center"}}>
                   <a href={"/examples/create-app.mp4"}>
-                    <video width={"60%"} height={"40%"} style={{"margin": "0", "padding": "0"}} loop autoPlay={true}>
-                      <source src={"/examples/create-app.mp4"} type={"video/mp4"}/>
-                    </video>
+                    <VideoComponent/>
                   </a>
                   <p><i>Figure displaying the creation of an application</i></p>
                 </div>
@@ -170,7 +189,6 @@ export default class Home extends Component {
                 </div>
                 </div>
               </div>
-            <Footer/>
           </main>
         </div>
     );

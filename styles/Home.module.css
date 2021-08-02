@@ -150,6 +150,7 @@ img.avatar {
   background-color: #2C2F33;
   box-shadow: 0 -3px 10px 2px #2C2F33AA;
   max-width: 60%;
+  min-width: 60px;
   border-radius: 12px;
   padding: 20px;
   margin: 8px
