@@ -5,8 +5,9 @@ footer.mainFooter {
     color: #dadddd;
     box-shadow: 0 -3px 13px 2px #23272AAA;
     width: 100%;
-    position: absolute;
-    bottom: 0
+    /*position: absolute;*/
+    /*height: 300px;*/
+    /*bottom: 0*/
 }
 
 div.flexRow {

@@ -5,9 +5,11 @@ import Footer from "../public/components/footer";
 function MyApp({ Component, pageProps }) {
   return (
       <>
-        <Nav/>
-        <Component {...pageProps} />
-        <Footer/>
+          <div style={{minHeight: "100%"}}>
+              <Nav/>
+              <Component {...pageProps} />
+              <Footer/>
+          </div>
       </>
   )
 }

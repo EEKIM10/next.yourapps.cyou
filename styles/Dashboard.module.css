@@ -38,3 +38,15 @@
     background-color: #99AAB5;
     height: 100%;
 }
+
+.active {
+    background: #ccc;
+    padding: 8px;
+    font-weight: bolder;
+    border-radius: 12px;
+}
+.inactive {
+    background: #ddd;
+    padding: 8px;
+    border-radius: 12px;
+}

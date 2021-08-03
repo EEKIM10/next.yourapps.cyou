@@ -82,8 +82,6 @@ class UserCard extends Component {
         else {
             href = "/dashboard"
         }
-        try {console.log("Cookies (USERCARD_COMPONENT_RENDER): " + document.cookie)}
-        catch {}
 
         return (
             <div className={styles.spacedBox}>

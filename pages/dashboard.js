@@ -92,7 +92,7 @@ function Guild(props) {
     return (
         <a href={"#"+props.guild.id} title={props.guild.name} style={{margin: "4px", borderRadius: "50%"}} id={props.guild.id}>
             <Image src={uri} alt={props.guild.name} placeholder={"blur"} blurDataURL={placeholder} className={styles.avatar}
-            onClick={()=>{document.getElementById(props.guild.id).parentElement.remove()}} width={"64px"} height={"64px"}/>
+            onClick={()=>{document.getElementById(props.guild.id).children[0].src = "/loading.gif"}} width={"64px"} height={"64px"}/>
         </a>
     )
 }
@@ -121,9 +121,14 @@ class ServerSelection extends Component {
             }
         }
         return (
-            <div id={"guilds"}>
-                {legal.map((g)=>{return <Guild key={g.id} guild={g}/>})}
-            </div>
+            <>
+                <div style={{textAlign: "center"}}>
+                    <Loader width={"64px"} height={"64px"}/>
+                </div>
+                <div id={"guilds"}>
+                    {legal.map((g)=>{return <Guild key={g.id} guild={g}/>})}
+                </div>
+            </>
         )
     }
 }
@@ -133,23 +138,91 @@ class DashboardUI extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            viewing: "index",
             metaData: {},
-            serverData: {}
+            serverData: {
+                id: "0",
+                prefixes: ["ya?"],
+                log_channel: "0",
+                arc_channel: "0",
+                admin_roles: [],
+                review_roles: [],
+                blacklist_roles: [],
+                ignored_channels: [],
+                ignored_roles: [],
+                apps: {},
+                premium: true
+            }
         }
     }
 
     async componentDidMount() {
+        try {this.cookies = document.cookie.match("session=(?<session>[a-zA-Z0-9]+)").groups}
+        catch {this.cookies = {session: null}}
+        if(this.cookies.session) {
+            let me_response;
+            try {
+                me_response = await fetch(
+                    "/api/me",
+                    {
+                        headers: {
+                            authorization: this.cookies.session,
+                        }
+                    }
+                )
+            }
+            catch {
+                me_response = {status: 0}
+            }
+            if(me_response.status!==200) {
+                window.location.href = "/api/login"
+            }
+        }
+        else {
+            window.location.href = "/api/login"
+        }
+
         const response = await fetch(
             "/api/guild?id=" + this.props.guild.id,
+            {
+                headers: {
+                    "Authorization": this.cookies.session
+                }
+            }
+        )
+    }
 
+    settings() {
+        this.setState()
+        return (
+            <div>
+                <h2>Settings</h2>
+                <div className={styles.section}>
+                    <h3>Prefix</h3>
+                    <p>This is the few characters you add to the front of your message to inform the bot that
+                    you&apos;re talking to it.</p>
+                    <p><code>ya-v3-force-prefix?</code> is a hardcoded prefix that cannot be added or removed,
+                    and is there in case you forget your prefix.</p>
+                    <span>Prefix: </span> <input type={"text"} value={this.state.serverData.prefixes.join(" ")}/>
+                </div>
+            </div>
         )
     }
 
     render() {
         return (
-            <div className={styles.column}>
-                <h3>{this.state.metaData.name}</h3>
-            </div>
+            <>
+                <div className={styles.column}>
+                    <h3>{this.state.metaData.name}</h3>
+                    <hr/>
+                    <ul>
+                        <li><a onClick={this.settings} className={this.state.viewing === "settings" ? styles.active:styles.inactive}>Server Settings</a></li>
+                    </ul>
+                </div>
+                <div className={styles.body}>
+
+                </div>
+            </>
         )
     }
 }
@@ -169,7 +242,6 @@ export default class Dashboard extends Component {
                     <Head>
                         <title>Dashboard - Select Server</title>
                     </Head>
-                    <Loader width={"64px"} height={"64px"}/>
                     <h1 style={{textAlign: "center"}}>Select A Server</h1>
                     <div style={{display: "flex", justifyContent: "center", alignItems: "baseline", textAlign: "center"}}>
                         <div style={{width: "50%"}}>
