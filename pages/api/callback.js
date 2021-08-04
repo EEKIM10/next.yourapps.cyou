@@ -20,6 +20,7 @@ export default async function handle(req, res) {
         formData.append("redirect_uri", "http://localhost:3000/api/callback");
     }
 
+
     const response = await fetch(
         "https://discord.com/api/oauth2/token",
     {
