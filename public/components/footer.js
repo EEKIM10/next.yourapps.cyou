@@ -5,6 +5,26 @@ import styles from '../../styles/footer.module.css';
 const t = "https://top.gg/bot/"
 
 
+function isInViewport(element) {
+    const rect = element.getBoundingClientRect();
+    return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+}
+
+
+function footerCheck() {
+    const footer = document.getElementsByTagName("footer").item(0);
+    if(footer) {
+        footer.hidden = !isInViewport(footer)
+    }
+}
+
+
+
 class Footer extends Component {
     constructor(props) {
         super(props);
@@ -13,6 +33,7 @@ class Footer extends Component {
     render() {
         return (
             <div>
+                <span onLoad={()=>{console.log("fuck this");setInterval(footerCheck, 10)}}/>
                 <footer className={styles.mainFooter}>
                     <div style={{display: "flex", justifyContent: "space-between"}}>
                         <div>
