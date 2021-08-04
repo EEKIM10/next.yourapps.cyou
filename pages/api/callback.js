@@ -13,8 +13,12 @@ export default async function handle(req, res) {
     formData.append("client_secret", process.env.CLIENT_SECRET);
     formData.append("grant_type", "authorization_code");
     formData.append("code", code);
-    // formData.append("redirect_uri", "https://next.yourapps.cyou/api/callback");
-    formData.append("redirect_uri", "http://localhost:3000/api/callback");
+    if(process.env.DEV === "0") {
+        formData.append("redirect_uri", "https://next.yourapps.cyou/api/callback");
+    }
+    else {
+        formData.append("redirect_uri", "http://localhost:3000/api/callback");
+    }
 
     const response = await fetch(
         "https://discord.com/api/oauth2/token",
