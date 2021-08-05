@@ -1,6 +1,12 @@
 import {select, insert_raw} from "../../utils/db";
 import FormData from "form-data";
 
+let cache = {};
+
+const genToken = () => {
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+}
+
 export default async function handle(req, res) {
     const code = req.query.code;
     if(!code) {
@@ -35,15 +41,23 @@ export default async function handle(req, res) {
     const data = await response.json();
     let token;
     // noinspection JSUnresolvedVariable
-    if(!await select("SELECT key FROM tokens WHERE value=?;", [data.access_token])) {
-        token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-        console.log("Token: %c" + token, "font-weight: 900");
-        console.log("Access: %c" + data.access_token, "font-weight: 900")
-        await insert_raw("INSERT INTO tokens (key, value) VALUES (?, ?);", [token, data.access_token]);
+    try {
+        if(!await select("SELECT key FROM tokens WHERE value=?;", [data.access_token])) {
+            token = genToken();
+            cache[token] = data.access_token
+            try {await insert_raw("INSERT INTO tokens (key, value) VALUES (?, ?);", [token, data.access_token]);}
+            catch {}
+        }
+        else {
+            try {token = (await select("SELECT key FROM tokens WHERE value=?", [data.access_token])).key}
+            catch {token = genToken()}
+            cache[token] = data.access_token
+        }
     }
-    else {
-        token = (await select("SELECT key FROM tokens WHERE value=?", [data.access_token])).key
+    catch {
+        cache[genToken()] = data.access_token
     }
+
     res.status(307).setHeader(
         "Set-Cookie",
         `session=${token}; Expires=${new Date(Date.now() + 806400*1000)}; Path=/`
