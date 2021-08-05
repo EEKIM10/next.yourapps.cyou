@@ -8,5 +8,10 @@ export default async function Handler(req, res) {
             }
         }
     );
-    res.status(response.status).json(await response.json())
+    res.status(response.status)
+        .setHeader(
+            "Cache-Control",
+            "public, min-fresh=300, max-age=86400, stale-while-revalidate=600"
+        )
+        .json(await response.json())
 }
