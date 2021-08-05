@@ -2,10 +2,6 @@ import Head from 'next/head';
 import Image from "next/image";
 import styles from '../styles/Home.module.css'
 import {Component} from "react";
-import avatar from '../public/avatar.png';
-import Nav from "../public/components/nav";
-import Footer from "../public/components/footer";
-import placeholder from '../public/placeholder.png'
 
 let statsData = {guilds: "loading", "users": "loading", "positions": "loading", "commands": "loading"};
 
@@ -37,7 +33,7 @@ class VideoComponent extends Component {
           </video>
       );
     }
-    return <Image src={placeholder} width={"60%"} height={"40%"} style={{"margin": "0", "padding": "0"}} alt={"loading video..."}/>
+    return <Image src={'/placeholder.png'} width={"60%"} height={"40%"} style={{"margin": "0", "padding": "0"}} alt={"loading video..."}/>
   }
 }
 
@@ -94,7 +90,7 @@ export default class Home extends Component {
             </div>
             <div style={{textAlign: "center"}}>
               <h1 style={{textAlign: "center"}}>YourApps</h1>
-              <Image src={avatar} alt={""} width={"128px"} height={"128px"} placeholder={"blur"}/>
+              <Image src={'/avatar.png'} alt={""} width={"128px"} height={"128px"} placeholder={"blur"}/>
               <p><strong>{this.state.guilds.toLocaleString()}</strong> Servers!</p>
               <div style={{display: "flex",flexDirection:"row",justifyContent: "space-evenly",alignContent:"center",alignItems:"center"}}>
                 <a href={"https://yourapps.cyou/invite?ref=index-top-new"}>
