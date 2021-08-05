@@ -33,6 +33,11 @@ export default async function handle(req, res) {
             return;
         }
         const _data = await response.json();
-        res.status(200).json(_data);
+        res.status(200)
+            .setHeader(
+                "Cache-Control",
+                "public, min-fresh=300, max-age=86400, stale-while-revalidate=600"
+            )
+            .json(_data);
     }
 }
