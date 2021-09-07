@@ -159,34 +159,36 @@ export default class Home extends Component {
               <div>
                 <h2>Just tell me the features already!</h2>
                 <p>Well, here&apos;s just a few:</p>
-                <div style={{display: "flex", flexDirection: "row", justifyContent: "space-evenly", textAlign: "center"}}>
-                  <div>
+                <div style={{display: "flex", justifyContent: "center", justifyItems: "center", alignItems: "center", alignContent: "center"}}>
+                  <div style={{display: "flex", flexDirection: "row", alignItems: "center", textAlign: "center"}}>
+                    <div>
+                      <div style={{display: "flex", flexDirection: "column"}}>
+                        <div className={styles.shadowBox}>
+                          <h4>Simple, memorable commands</h4>
+                          <p>The commands you use most are easy to remember, with short names & arguments.</p>
+                        </div>
+                        <div className={styles.shadowBox}>
+                          <h4>Powerful flexibility</h4>
+                          <p>YourApps has been pressured and tested in basically all environments known to man -
+                            earth, space, moon, you name it!</p>
+                          <p>Just pulling your leg! However, on a serious note, YourApps has over 1 thousand servers,
+                            all with their own unique configurations and permissions. And YourApps works in all of them!</p>
+                        </div>
+                      </div>
+                    </div>
                     <div style={{display: "flex", flexDirection: "column"}}>
                       <div className={styles.shadowBox}>
-                        <h4>Simple, memorable commands</h4>
-                        <p>The commands you use most are easy to remember, with short names & arguments.</p>
+                        <h4>Reliable & Fast</h4>
+                        <p>YourApps is designed to have many redundancies, while still remaining fast.
+                          YourApps is pretty much always ready when you are!</p>
                       </div>
                       <div className={styles.shadowBox}>
-                        <h4>Powerful flexibility</h4>
-                        <p>YourApps has been pressured and tested in basically all environments known to man -
-                          earth, space, moon, you name it!</p>
-                        <p>Just pulling your leg! However, on a serious note, YourApps has over 1 thousand servers,
-                          all with their own unique configurations and permissions. And YourApps works in all of them!</p>
+                        <h4>Foo bar</h4>
+                        <p>YourApps is designed to do this really cool thing but it actually only kinda does it</p>
                       </div>
                     </div>
                   </div>
-                  <div style={{display: "flex", flexDirection: "column"}}>
-                    <div className={styles.shadowBox}>
-                      <h4>Reliable & Fast</h4>
-                      <p>YourApps is designed to have many redundancies, while still remaining fast.
-                        YourApps is pretty much always ready when you are!</p>
-                    </div>
-                    <div className={styles.shadowBox}>
-                      <h4>Foo bar</h4>
-                      <p>YourApps is designed to do this really cool thing but it actually only kinda does it</p>
-                    </div>
                   </div>
-                </div>
                 </div>
               </div>
           </main>
