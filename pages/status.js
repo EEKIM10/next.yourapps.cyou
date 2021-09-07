@@ -287,7 +287,7 @@ class StatusPage extends Component {
             <>
                 <div id="debug" hidden>
                     <p>StatusPage State:</p>
-                    <code>{JSON.stringify(this.state, null, 2)}</code>
+                    <code><pre>{JSON.stringify(this.state, null, 2)}</pre></code>
                 </div>
                 <div style={{height: "50vh", textAlign: "center"}}>
                     <div style={{display: "flex", justifyContent: "center"}}>
