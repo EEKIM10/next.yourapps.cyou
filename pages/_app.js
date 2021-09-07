@@ -8,7 +8,7 @@ function MyApp({ Component, pageProps }) {
           <div style={{minHeight: "100%"}}>
               <Nav/>
               <Component {...pageProps} />
-              <Footer/>
+              {/* <Footer/> */}
           </div>
       </>
   )

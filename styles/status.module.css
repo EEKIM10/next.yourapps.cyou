@@ -1,0 +1,51 @@
+.overallBar {
+    width: 75%;
+    padding: 8px;
+    margin: 4px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 2px;
+    border-radius: 6px
+}
+
+.shardOnline {
+    width: 256px;
+    height: auto;
+    border-radius: 20%;
+    border: 1px solid #43b581;
+    background-color: #43b581AA
+}
+
+.shardSlow {
+    width: 256px;
+    height: auto;
+    border-radius: 20%;
+    border: 1px solid #43b581;
+    background-color: #43b581AA
+}
+
+.shardReally Slow {
+    width: 256px;
+    height: auto;
+    border-radius: 20%;
+    border: 1px solid #d64141;
+    background-color: #d64141AA 
+}
+
+.shardOffline {
+    width: 256px;
+    height: auto;
+    border-radius: 20%;
+    border: 1px solid #b9bbbe;
+    background-color: #b9bbbeAA
+}
+
+.table {
+    text-align: center;
+    margin: 0 auto;
+    width: 65%
+}
+
+.tableRow {
+    border: 1px solid #ccc;
+    text-align: center;
+}

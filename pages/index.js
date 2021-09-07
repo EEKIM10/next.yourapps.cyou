@@ -3,7 +3,7 @@ import Image from "next/image";
 import styles from '../styles/Home.module.css'
 import {Component} from "react";
 
-let statsData = {guilds: "loading", "users": "loading", "positions": "loading", "commands": "loading"};
+let statsData = {guilds: "loading", users: "loading", positions: "loading", commands: "loading", shards: "loading", ping: 1};
 
 function convertCookies(cookie) {
   let output = {};
@@ -90,7 +90,7 @@ export default class Home extends Component {
             </div>
             <div style={{textAlign: "center"}}>
               <h1 style={{textAlign: "center"}}>YourApps</h1>
-              <Image src={'/avatar.png'} alt={""} width={"128px"} height={"128px"} placeholder={"blur"}/>
+              <Image src={'/avatar.png'} alt={""} width={"128px"} height={"128px"}/>
               <p><strong>{this.state.guilds.toLocaleString()}</strong> Servers!</p>
               <div style={{display: "flex",flexDirection:"row",justifyContent: "space-evenly",alignContent:"center",alignItems:"center"}}>
                 <a href={"https://yourapps.cyou/invite?ref=index-top-new"}>
@@ -135,19 +135,23 @@ export default class Home extends Component {
                 <p>We aren&apos;t just joking around here, we&apos;ve got some serious numbers to prove our worth!</p>
                 <table style={{width: "65%", textAlign: "center", margin: "0 auto"}}>
                   <thead>
-                  <tr className={"table-row"}>
+                  <tr className={styles.tableRow}>
                     <th>Servers</th>
                     <th>Users</th>
                     <th>Applications</th>
                     <th>Commands</th>
+                    <th>Shards</th>
+                    <th>Ping (ms)</th>
                   </tr>
                   </thead>
                   <tbody>
-                  <tr className={"table-row"}>
+                  <tr className={styles.tableRow}>
                     <td>{this.state.guilds.toLocaleString()}</td>
                     <td>{this.state.users.toLocaleString()}</td>
                     <td>{this.state.positions.toLocaleString()}</td>
                     <td>{this.state.commands.toLocaleString()}</td>
+                    <td>{this.state.shards.toLocaleString()}</td>
+                    <td>{(this.state.ping).toLocaleString()}</td>
                   </tr>
                   </tbody>
                 </table>
