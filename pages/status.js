@@ -84,7 +84,6 @@ class ShardStatus extends Component {
         }
         let online = this.state.online;
         let latency = this.state.latency;
-        let _classname = online ? styles.shardOnline : styles.shardOffline;
         let slowStatus = null;
     
         if(latency>=500 && online) {
@@ -100,12 +99,11 @@ class ShardStatus extends Component {
         }
     
         return (
-            <pre><code>{JSON.stringify(this.state)}</code></pre>
-            // <div className={_classname} title={`Shard ID: ${this.shard_id} | Online: ${this.state.online} | Latency (ms): ${this.state.latency}`} key={this.shard_id}>
-            //     ID: {this.shard_id}<br/>
-            //     Connected To Discord: <span style={{color: this.state.online }}>{String(this.state.online)}</span><br/>
-            //     Speed: {slowStatus} ({latency}ms)<br/>
-            // </div>
+            <div className={online ? styles.shardOnline : styles.shardOffline}>
+                <span>ID: {this.shard_id}</span><br/>
+                <span>Connected To Discord: <span style={{color: this.state.online ? "green":"red"}}>{String(this.state.online)}</span></span><br/>
+                <span>Speed: {slowStatus} ({latency.toLocaleString()}ms)</span>
+            </div>
         )
     }
 }
