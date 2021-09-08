@@ -124,20 +124,12 @@ class StatusPage extends Component {
         server_online: false,
         shards: [],
         stats: {
-            "users": 0,
-            "guilds": 0,
-            "channels": 0,
-            "emojis": 0,
-            "commands": 0,
-            "positions": 0,
             "cpu": [
                 -1,
                 -1
             ],
             "load_averages": [
-                -1,
-                -1,
-                -1
+                "loading"
             ],
             "memory": {
                 "free": "0B",
@@ -158,17 +150,15 @@ class StatusPage extends Component {
         super(props);
         this.interval;
         this.lock = false;
-        this.shard_elements = {};
+        this.shard_elements = [];
     }
 
     async fetchStatus() {
         let response;
         let response2
         try {
-            console.log("Requesting status")
             response = await fetch("https://api.yourapps.cyou/meta/status");
-            console.log("Requesting stats")
-            response2 = await fetch("https://api.yourapps.cyou/meta/stats")
+            response2 = await fetch("https://api.yourapps.cyou/meta/stats");
         }
         catch (e) {
             console.error("Network Error.")
@@ -192,13 +182,17 @@ class StatusPage extends Component {
         }
         else {
             const data = await response.json();
-            console.log("Status Data:", data)
-            this.createShards(data)
+            let stats = this.state.stats;
+            try {
+                stats = await response2.json();
+            }
+            catch {}  // doesn't matter.
             this.setState(
                 {
                     server_online: true,
                     data: data,
-                    stats: await response2.json()
+                    stats: stats,
+                    shard_elements: this.createShards(data)
                 },
                 didSetState
             )
@@ -214,35 +208,7 @@ class StatusPage extends Component {
                 <ShardStatus shard_id={shard_id} online={shard_data.online} latency={shard_data.latency} key={shard_id}/>
             )
         }
-        this.setState({shards: new_shards}, didSetState)
-    }
-
-    async getInitialShardCount() {
-        console.log("GetInitialShardCount")
-        // The purpose of this method is to pre-create the shard objects before they're rendered.
-        // This makes it significantly easier to update them as we don't have to do anything but render in the render method.
-        // The drawback to this, however, is that we won't get any new shards if this page is left open when a new shard is created.
-        // I mean, to be honest though, the chances of a new shard being launched during this page's lifespan is... slim, at best.
-        let response, data;
-        try {
-            response = await fetch("https://api.yourapps.cyou/meta/status");
-            data = await response.json();
-            console.log(data)
-        }
-        catch (e) {
-            console.error(e)
-            return;
-        };
-        let new_shards = []
-        for(let shard_id of Object.keys(data.shards)) {
-            console.log(shard_id)
-            let shard_data = data.shards[shard_id]
-            new_shards.push(
-                <ShardStatus shard_id={shard_id} online={shard_data.online} latency={shard_data.latency}/>
-            )
-        }
-        this.setState({shards: new_shards}, didSetState)
-        console.log(new_shards)
+        return new_shards
     }
 
     componentWillUnmount() {
@@ -269,15 +235,8 @@ class StatusPage extends Component {
             )
         }
         const x = () => this.interval = setInterval(callback, 1000, _t)
-        this.getInitialShardCount().then(x)
+        x()
     }
-
-    // componentDidUpdate() {
-    //     try {
-    //         this.setState({call: this.state.call+1})
-    //     }
-    //     catch {}
-    // }
 
     render() {
         if(!this.state) {
@@ -296,8 +255,7 @@ class StatusPage extends Component {
                     <hr style={{width: "75%", textAlign: "center"}}/>
                     <h2>Individual shard statuses</h2>
                     <div style={{display: "flex", justifyContent: "center", backgroundColor: "rgba(5,5,5,0.5)"}}>
-                        {console.log("Rendering...", this.state.shards)}
-                        {this.state.shards.map((x, i) => {return x})}
+                        {this.state.shard_elements.map((x, i) => {return <div key={i}>{x}</div>})}
                     </div>
                 </div>
             </>
