@@ -122,7 +122,7 @@ class StatusPage extends Component {
         },
         call: 0,
         server_online: false,
-        shards: [],
+        shard_elements: [],
         stats: {
             "cpu": [
                 -1,
