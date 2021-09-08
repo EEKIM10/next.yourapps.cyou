@@ -239,7 +239,7 @@ class StatusPage extends Component {
 
     renderShards() {
         return this.state.shard_elements.map(
-            (x, y) => {return <div key={y}><p>{y}</p>{x}<br/><code>{JSON.stringify(x, null, 2)}</code></div>}
+            (x, y) => {return <div key={y}><p>{y}</p><div>{x}</div><br/><code>{JSON.stringify(x, null, 2)}</code></div>}
         )
     }
 
