@@ -100,11 +100,12 @@ class ShardStatus extends Component {
         }
     
         return (
-            <div className={_classname} title={`Shard ID: ${this.shard_id} | Online: ${this.state.online} | Latency (ms): ${this.state.latency}`} key={this.shard_id}>
-                ID: {this.shard_id}<br/>
-                Connected To Discord: {String(this.state.online)}<br/>
-                Speed: {slowStatus} ({latency}ms)<br/>
-            </div>
+            <pre><code>{JSON.stringify(this.state)}</code></pre>
+            // <div className={_classname} title={`Shard ID: ${this.shard_id} | Online: ${this.state.online} | Latency (ms): ${this.state.latency}`} key={this.shard_id}>
+            //     ID: {this.shard_id}<br/>
+            //     Connected To Discord: <span style={{color: this.state.online }}>{String(this.state.online)}</span><br/>
+            //     Speed: {slowStatus} ({latency}ms)<br/>
+            // </div>
         )
     }
 }
