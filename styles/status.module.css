@@ -2,7 +2,7 @@
     width: 75%;
     padding: 8px;
     margin: 4px;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(20, 20, 20, 0.2);
     border: 2px;
     border-radius: 6px
 }
@@ -46,6 +46,9 @@
 }
 
 .tableRow {
-    border: 1px solid #ccc;
+    border-bottom: 9vh solid white !important;
     text-align: center;
 }
+/* .tableRow:nth-child(even) {
+    color: #eee
+} */

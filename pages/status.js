@@ -158,6 +158,35 @@ class StatusPage extends Component {
         this.shard_elements = [];
     }
 
+    keyPressEvent(that) {
+        return (e) => {
+            switch (e.key) {
+                case "s":
+                    if(!that.state.data.shards) {
+                        break;
+                    }
+                    const server_id = prompt("Please enter your server ID to calculate your shard.");
+                    if(!server_id) {
+                        alert("No server ID provided.");
+                        break;
+                    }
+                    else {
+                        const shard_id = (server_id >> 22) % Object.keys(that.state.data.shard).length
+                        alert("Your server is on shard: " + shard_id)
+                    }
+                    
+                    break;
+                case "d":
+                    let element = document.getElementById("debug");
+                    if(element) {
+                        element.hidden = !element.hidden;
+                    }
+                    break;
+            }
+            return;
+        }
+    }
+
     async fetchStatus() {
         let response;
         let response2
@@ -236,8 +265,12 @@ class StatusPage extends Component {
         };
     }
 
+    componentDidUpdate() {
+        document.addEventListener("keydown", this.keyPressEvent(this), {passive: true})
+    }
+
     componentDidMount() {
-        document.addEventListener("keydown", (x) => {if(x.key==="d"){document.getElementById("debug").hidden=!document.getElementById("debug").hidden}})
+
         const _t = this;
         function callback(_this) {
             if(_this.lock===true) {
@@ -258,8 +291,30 @@ class StatusPage extends Component {
     }
 
     renderShards() {
-        return this.state.shard_elements.map(
-            (x, y) => {return <div key={y}><p>{y}</p><div>{x}</div><br/><code>{JSON.stringify(x, null, 2)}</code></div>}
+        let elements = [];
+        for(let shard_id of Object.keys(this.state.data.shards)) {
+            let _data = this.state.data.shards[shard_id]
+            elements.push(
+                <tr>
+                    <td>{shard_id}</td>
+                    <td style={{color: _data.online ? "green" : "red"}}>{_data.online ? "yes" : "no"}</td>
+                    <td>{(_data.latency*1000).toLocaleString()}</td>
+                </tr>
+            )
+        }
+        return (
+            <table className={styles.table}>
+                <thead>
+                    <tr className={styles.tableRow}>
+                        <th>Shard ID</th>
+                        <th>Connected To Discord</th>
+                        <th>Ping (ms)</th>
+                    </tr>
+                </thead>
+                <tbody className={styles.tableRow}>
+                    {elements.map((x) => x)}
+                </tbody>
+            </table>
         )
     }
 
@@ -279,7 +334,7 @@ class StatusPage extends Component {
                     </div>
                     <hr style={{width: "75%", textAlign: "center"}}/>
                     <h2>Individual shard statuses</h2>
-                    <div style={{display: "flex", justifyContent: "center", backgroundColor: "rgba(5,5,5,0.5)"}}>
+                    <div style={{display: "flex", justifyContent: "center", backgroundColor: "rgba(20,20,20,0.2)"}}>
                         {this.renderShards()}
                     </div>
                 </div>
