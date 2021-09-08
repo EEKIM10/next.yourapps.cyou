@@ -238,6 +238,12 @@ class StatusPage extends Component {
         x()
     }
 
+    renderShards() {
+        return this.state.shard_elements.map(
+            (x, y) => {return <div key={y}><p>y</p>{x}</div>}
+        )
+    }
+
     render() {
         if(!this.state) {
             return null;
@@ -255,7 +261,7 @@ class StatusPage extends Component {
                     <hr style={{width: "75%", textAlign: "center"}}/>
                     <h2>Individual shard statuses</h2>
                     <div style={{display: "flex", justifyContent: "center", backgroundColor: "rgba(5,5,5,0.5)"}}>
-                        {this.state.shard_elements.map((x) => {return <div key={x.props.shard_Id}>{x}</div>})}
+                        {this.renderShards()}
                     </div>
                 </div>
             </>
