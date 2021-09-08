@@ -99,11 +99,14 @@ class ShardStatus extends Component {
         }
     
         return (
-            <div className={online ? styles.shardOnline : styles.shardOffline}>
-                <span>ID: {this.shard_id}</span><br/>
-                <span>Connected To Discord: <span style={{color: this.state.online ? "green":"red"}}>{String(this.state.online)}</span></span><br/>
-                <span>Speed: {slowStatus} ({latency.toLocaleString()}ms)</span>
-            </div>
+            <>
+                <h1>Shard {this.shard_id}</h1>
+                <div className={online ? styles.shardOnline : styles.shardOffline}>
+                    <span>ID: {this.shard_id}</span><br/>
+                    <span>Connected To Discord: <span style={{color: this.state.online ? "green":"red"}}>{String(this.state.online)}</span></span><br/>
+                    <span>Speed: {slowStatus} ({latency.toLocaleString()}ms)</span>
+                </div>
+            </>
         )
     }
 }
