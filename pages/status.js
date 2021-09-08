@@ -41,7 +41,7 @@ function statusBar(is_online, data) {
     }
     return (
         <div className={styles.overallBar} style={{borderColor: colour}}>
-            <p>Overall Bot Process Status: <span style={{fontWeight: "bolder"}}>{status}</span></p>
+            <p>Overall Bot Process Status: <span style={{fontWeight: "bolder", color: colour}}>{status}</span></p>
             <i style={{fontSize: "11px"}}>This status represents if the bot process is even running.</i>
             <hr/>
             <table className={styles.table}>
@@ -68,20 +68,23 @@ function statusBar(is_online, data) {
 
 
 class ShardStatus extends Component {
+
+    state = {
+        online: false,
+        latency: 0.0
+    }
     constructor(props) {
         super(props)
+        console.warn("Created shard", props.shard_id)
         this.shard_id = props.shard_id;
         this.setState({online: props.online, latency: props.latency})
     }
 
-    update(online, latency) {
+    update(online=false, latency=0.0) {
         this.setState({online: online, latency: latency})
     }
 
     render() {
-        if(!this.state) {
-            return null;
-        }
         let online = this.state.online;
         let latency = this.state.latency;
         let slowStatus = null;
@@ -189,16 +192,30 @@ class StatusPage extends Component {
                 stats = await response2.json();
             }
             catch {}  // doesn't matter.
+            if(this.state.shard_elements) {
+                for(let shard_id of Object.keys(data.shards)) {
+                    this.updateShard(shard_id)
+                }
+            }
+            else {
+                this.createShards(data)
+            }
             this.setState(
                 {
                     server_online: true,
                     data: data,
                     stats: stats,
-                    shard_elements: this.createShards(data)
+                    shard_elements: this.state.shard_elements
                 },
                 didSetState
             )
         }
+    }
+
+    updateShard(shard_id, new_element) {
+        let new_shards = this.state.shard_elements;
+        new_shards[shard_id] = new_element
+        this.setState({shard_elements: new_shards})
     }
 
     createShards(data) {
