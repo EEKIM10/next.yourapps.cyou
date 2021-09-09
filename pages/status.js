@@ -188,11 +188,23 @@ class StatusPage extends Component {
     }
 
     async fetchStatus() {
+        const that = this;
         let response;
-        let response2
+        fetch(
+            "https://api.yourapps.cyou/meta/stats"
+        )
+        .then(
+            (response) => {
+                if(response.ok) {
+                    response.json().then(
+                        (j) => that.setState({stats: j})
+                    )
+                }
+            }
+        )
+        .catch()
         try {
             response = await fetch("https://api.yourapps.cyou/meta/status");
-            response2 = await fetch("https://api.yourapps.cyou/meta/stats");
         }
         catch (e) {
             console.error("Network Error.")
@@ -205,7 +217,7 @@ class StatusPage extends Component {
             )
             return;
         }
-        if(!response.ok) {
+        if(!response.ok||response.status!==200) {
             this.setState(
                 {
                     server_online: false
@@ -216,11 +228,10 @@ class StatusPage extends Component {
         }
         else {
             const data = await response.json();
-            let stats = this.state.stats;
-            try {
-                stats = await response2.json();
+            if(data.detail) {
+                this.setState({server_online: false});
+                return
             }
-            catch {}  // doesn't matter.
             if(this.state.shard_elements) {
                 for(let shard_id of Object.keys(data.shards)) {
                     this.updateShard(shard_id)
@@ -233,7 +244,6 @@ class StatusPage extends Component {
                 {
                     server_online: true,
                     data: data,
-                    stats: stats,
                     shard_elements: this.state.shard_elements
                 },
                 didSetState
