@@ -86,9 +86,9 @@ class UserCard extends Component {
         return (
             <div className={styles.spacedBox}>
                 <a href={href}>
-                    <div>
-                        <Image src={this.state.avatar_url} width={"32px"} height={"32px"}/>
-                        <span title={"Dashboard"} style={{paddingLeft: "4px", fontSize: "18px"}}>{this.state.username}</span>
+                    <div style={{display: "inline-flex", flexDirection: "row", verticalAlign: "baseline", alignItems: "center"}}>
+                        <div><Image src={this.state.avatar_url} width={"32px"} height={"32px"}/></div>
+                        <div><span title={"Dashboard"} style={{paddingLeft: "4px", fontSize: "18px"}}>{this.state.username}</span></div>
                     </div>
                 </a>
             </div>
@@ -107,13 +107,13 @@ export default class Nav extends Component {
             <nav className={styles.mainNav}>
                 <div className={styles.navBoxLeft}>
                     <a href={"/"}>
-                        <div style={{display: "inline-flex", flexDirection: "row", verticalAlign: "baseline", alignItems: "center"}}>
+                        <div>
                             <Image src={"/avatar.png"} width={"64px"} height={"64px"} alt={""}/>
                             <span style={{marginLeft: "4px", fontSize: "2rem"}}>DDS - YourApps</span>
                         </div>
                     </a>
                 </div>
-                <div className={styles.navBoxRight}>
+                <div className={styles.navBoxRight} style={{display: "inline-flex", flexDirection: "row", verticalAlign: "baseline", alignItems: "center"}}>
                     <div className={styles.spacedBox}>
                         <a href={"/"} style={{fontSize: "18px"}}>Home</a>
                     </div>

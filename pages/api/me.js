@@ -1,4 +1,4 @@
-import {select} from '../../utils/db.js';
+import {db} from '../../utils/db.js';
 
 export default async function handle(req, res) {
     if(!req.cookies.session) {
@@ -9,7 +9,8 @@ export default async function handle(req, res) {
         );
         return
     }
-    const cookieData = await select("SELECT key, value FROM tokens WHERE value=? OR key=?;", [req.cookies.session, req.cookies.session]);
+    const cookieData = await db.get(req.cookies.session);
+    console.log("token:", cookieData)
 
     if(!cookieData) {
         res.status(401).json(
@@ -19,14 +20,16 @@ export default async function handle(req, res) {
         )
     }
     else {
+        console.log("Fetching /@me")
         const response = await fetch(
             "https://discord.com/api/v9/users/@me",
             {
                 headers: {
-                    authorization: "Bearer " + cookieData.value
+                    authorization: "Bearer " + cookieData
                 }
             }
         )
+        console.log("Done.")
         if(!response.ok) {
             console.error(`Failed to fetch me: got ${response.statusText}.`);
             res.status(response.status).json(await response.text());

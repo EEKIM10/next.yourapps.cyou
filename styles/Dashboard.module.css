@@ -84,3 +84,13 @@
 .body {
     margin-left: 20px
 }
+
+.mention {
+    border-radius: 4px;
+    padding: 0 2px;
+    color: #fff;
+    background-color: #7289DAAA;
+}
+.mention:hover {
+    background-color: #7289DACC;
+}

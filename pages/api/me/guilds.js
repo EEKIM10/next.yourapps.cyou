@@ -1,4 +1,4 @@
-import {select} from "../../../utils/db";
+import {db} from "../../../utils/db";
 
 
 export default async function handle(req, res) {
@@ -10,7 +10,7 @@ export default async function handle(req, res) {
         );
         return
     }
-    const cookieData = await select("SELECT key, value FROM tokens WHERE value=? OR key=?;", [req.cookies.session, req.cookies.session]);
+    const cookieData = await db.get(req.cookies.session)
 
     if(!cookieData) {
         res.status(401).json(
@@ -24,7 +24,7 @@ export default async function handle(req, res) {
             "https://discord.com/api/v9/users/@me/guilds",
             {
                 headers: {
-                    authorization: "Bearer " + cookieData.value
+                    authorization: "Bearer " + cookieData
                 }
             }
         )

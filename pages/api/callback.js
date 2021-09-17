@@ -1,13 +1,15 @@
-import {select, insert_raw} from "../../utils/db";
+import {db} from "../../utils/db";
 import FormData from "form-data";
-
-let cache = {};
 
 const genToken = () => {
     return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 }
 
 export default async function handle(req, res) {
+    if(process.env.VERCEL==="1") {
+        res.status(421).send("Preview builds are unable to use oauth.");
+        return;
+    }
     const code = req.query.code;
     if(!code) {
         res.status(307).setHeader("Location", "/api/login").send();
@@ -39,24 +41,8 @@ export default async function handle(req, res) {
         return
     }
     const data = await response.json();
-    let token;
-    // noinspection JSUnresolvedVariable
-    try {
-        if(!await select("SELECT key FROM tokens WHERE value=?;", [data.access_token])) {
-            token = genToken();
-            cache[token] = data.access_token
-            try {await insert_raw("INSERT INTO tokens (key, value) VALUES (?, ?);", [token, data.access_token]);}
-            catch {}
-        }
-        else {
-            try {token = (await select("SELECT key FROM tokens WHERE value=?", [data.access_token])).key}
-            catch {token = genToken()}
-            cache[token] = data.access_token
-        }
-    }
-    catch {
-        cache[genToken()] = data.access_token
-    }
+    const token = genToken().replaceAll(";", "");  // linter says strip isn't on string??
+    await db.set(token, data.access_token, 86400*1000)
 
     res.status(307).setHeader(
         "Set-Cookie",
