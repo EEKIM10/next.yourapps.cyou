@@ -2,7 +2,7 @@ import {db} from "../../utils/db";
 import FormData from "form-data";
 
 const genToken = () => {
-    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    return (Math.random()*10000).toString(16)
 }
 
 export default async function handle(req, res) {
