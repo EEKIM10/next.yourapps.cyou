@@ -91,10 +91,12 @@ class ServerSelector extends Component {
     state = {
         failed: false,
         guilds: [],
+        illegal: []
     }
     constructor(props) {
         super(props);
         this.parent = props.parent;
+        this.state.illegal = props.illegal||[]
     };
 
     async componentDidMount() {
@@ -125,7 +127,8 @@ class ServerSelector extends Component {
             return (
                 <div style={{border: "1px solid #ba000d", backgroundColor: "#f44336", borderRadius: "12px", padding: "6px"}}>
                     <h4>Failed to load servers.</h4>
-                    Try reloading the page. If that doesn't work, clear your cookies and site data, and log-in again.
+
+                    Try reloading the page. If that doesn&#39;t work, clear your cookies and site data, and log-in again.
                 </div>
             )
         }
@@ -139,10 +142,13 @@ class ServerSelector extends Component {
                         {
                             this.state.guilds.map(
                                 (guild) => {
+                                    if(this.state.illegal.includes(guild.id)) {
+                                        return null;
+                                    }
                                     const icon = resolve_image_url(guild.icon, "/icons/"+guild.id, 128);
                                     return (
                                         <a onClick={(e)=>{e.preventDefault();parent_this.selectGuild(guild)}} style={{width: "128px", height: "128px"}} key={guild.id}>
-                                            <img src={icon} className={styles.avatar} title={guild.name} style={{width: "128px", height: "128px"}}/>
+                                            <img src={icon} className={styles.avatar} title={guild.name} width={"128px"} height={"128px"} alt={guild.name}/>
                                         </a>
                                     )
                                 }
@@ -150,7 +156,7 @@ class ServerSelector extends Component {
                         }
                     </div>
                     <div>
-                        <p><i>Note: You can only see servers that you can manage.</i></p>
+                        <p><i>Note: You can only see servers that you can manage. Hover over an icon to see the server name.</i></p>
                     </div>
                 </div>
             )
@@ -179,6 +185,11 @@ class ManageServer extends Component {
     }
 
     async componentDidMount() {
+        if(this.state.data.config.detail!==undefined) {
+            // Server does not have yourapps.
+            this.parent.selectGuild(null);
+            return null;
+        };
         let newState = this.state;
         if(this.state.data.config.log_channel!==null){
             newState.resolved_channels.log_channel = await resolve_channel(this.state.data.config.log_channel);
@@ -201,38 +212,62 @@ class ManageServer extends Component {
     formatChannel(x) {
         if(x) {
             return (
-                <a href={"https://discord.com/channels/"+this.state.guild.id+"/"+x.id} className={styles.mention}>
+                <a href={"https://discord.com/channels/"+this.state.guild.id+"/"+x.id} className={styles.mention} target="_blank" rel="noreferrer">
                     #{x.name}
                 </a>
             )
         }
         return (
-            <p>Unset</p>
+            <span>Unset</span>
         )
     }
 
     formatRole(x) {
         return (
-            <p className={styles.mention} style={{"color": '#'+x.color.toString(16), backgroundColor: "#" + x.color.toString(16) + "AA"}}>
+            <span className={styles.mention} style={{"color": '#'+x.color.toString(16), backgroundColor: "#" + x.color.toString(16) + "33"}} key={x.id}>
                 @{x.name}
-            </p>
+            </span>
         )
     }
 
+    componentDidCatch(err=null) {
+        console.error(err)
+    }
+
     render() {
+        if(this.state.data.config.detail!==undefined) {
+            // Server does not have yourapps.
+            this.parent.killGuild(null);
+            return null;
+        };
         return (
             <div>
                 <h1>Manage settings for <em>{this.state.guild.name}</em>:</h1>
                 <hr style={{width: "90%", textAlign: "center"}}/>
+                <div className={styles.body}>
                 <div>
-                    <label>Prefixes: </label> <code>{this.state.data.config.prefixes.join(" ")||"ya?"}</code>
+                    <label>Prefixes: </label> <code className={styles.inline}>{this.state.data.config.prefixes.join(" ")||"ya?"}</code>
                 </div>
                 <div>
                     <p>Log channel: {this.formatChannel(this.state.resolved_channels.log_channel)}</p>
                     <p>Archive channel: {this.formatChannel(this.state.resolved_channels.archive_channel)}</p>
                 </div>
                 <div>
-                    {/* <p>Administrator roles: {this.formatRole(null)})</p> */}
+                    <p>
+                        Administrator roles: {
+                            Object.values(this.state.resolved_roles.admin_roles).map(
+                                (role, index) => <span key={index} style={{marginRight: "2px"}}>{this.formatRole(role)}</span>
+                            )
+                        }
+                    </p>
+                    <p>
+                        Reviewer roles: {
+                            Object.values(this.state.resolved_roles.review_roles).map(
+                                (role, index) => <span key={index} style={{marginRight: "2px"}}>{this.formatRole(role)}</span>
+                            )
+                        }
+                    </p>
+                </div>
                 </div>
             </div>
         );
@@ -243,10 +278,16 @@ class ManageServer extends Component {
 export default class Dashboard extends Component {
     state = {
         guild: null,
-        data: {}
-    }
+        data: {},
+        unusable: []
+    };
+
 
     async selectGuild(guild_data) {
+        if(!guild_data) {
+            this.setState({guild: null, data: {}})
+            return;
+        }
         let newState = {
             guild: guild_data,
             data: await fetch_guild(guild_data.id, null, true, true)
@@ -257,12 +298,21 @@ export default class Dashboard extends Component {
         this.setState(newState);
     }
 
+    killGuild(guild_id) {
+        this.disallowGuild(guild_id);
+        this.selectGuild(null);
+    }
+
+    disallowGuild(guild_id) {
+        this.setState({unusable: this.state.unusable.concat([guild_id])})
+    }
+
     render() {
         if(!this.state.guild) {
-            return <ServerSelector parent={this}/>
+            return <ServerSelector parent={this} illegal={this.unusable}/>
         }
         else {
-            return <><ManageServer parent={this} data={this.state.data} guild={this.state.guild}/><hr/><pre><code>{JSON.stringify(this.state, null, 2)}</code></pre></>
+            return <><ManageServer parent={this} data={this.state.data} guild={this.state.guild}/><hr/><h3>Debug:</h3><pre><code>{JSON.stringify(this.state, null, 2)}</code></pre></>
         }
     }
 }

@@ -72,7 +72,7 @@
 }
 
 .section, .body {
-    background-color: #2C2F33;
+    background-color: #4f545c;
     box-shadow: 0 -3px 10px 2px #2C2F33AA;
     max-width: 80%;
     min-width: 60px;
@@ -85,12 +85,37 @@
     margin-left: 20px
 }
 
+.disabled {
+    cursor: not-allowed;
+    filter: opacity(50%)
+}
+
 .mention {
     border-radius: 4px;
-    padding: 0 2px;
+    padding: 3px;
     color: #fff;
-    background-color: #7289DAAA;
+    background-color: #7289DA44;
+    cursor: default;
+    font-weight: 500;
 }
+
 .mention:hover {
-    background-color: #7289DACC;
+    -webkit-filter: brightness(150%);
+    filter: brightness(150%);
+    text-decoration: underline;
+}
+
+code.inline {
+    width: auto;
+    height: auto;
+    padding: .2em;
+    margin: -.2em 0;
+    border-radius: 3px;
+    font-size: 85%;
+    font-family: Consolas, monospace;
+    text-indent: 0;
+    border: none;
+    white-space: pre-wrap;
+    background-color: #2f3136;
+    color: #dcdddd
 }
