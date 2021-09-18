@@ -41,7 +41,7 @@ export default async function handle(req, res) {
         return
     }
     const data = await response.json();
-    const token = genToken().replaceAll(";", "");  // linter says strip isn't on string??
+    const token = (Math.random()*100000).toString(16)
     await db.set(token, data.access_token, 86400*1000)
 
     res.status(307).setHeader(
