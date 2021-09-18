@@ -6,7 +6,7 @@ const genToken = () => {
 }
 
 export default async function handle(req, res) {
-    if(process.env.VERCEL==="1") {
+    if(process.env.VERCEL==="1" && ["preview", "development"].includes(process.env.VERCEL_ENV)) {
         res.status(421).send("Preview builds are unable to use oauth.");
         return;
     }
