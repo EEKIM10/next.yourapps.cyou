@@ -39,7 +39,6 @@ async function request(req, res, target) {
 
 export default async function Handler(req, res) {
     let data = {}
-    console.log(req.query)
     for(let query_data of req.query.data.split(" ")) {
         try{data[query_data] = await request(req, res, query_data);}
         catch{}

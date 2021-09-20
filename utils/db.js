@@ -2,7 +2,7 @@ const KeyV = require("keyv");
 let db;
 
 if(process.env.VERCEL==="1") {
-    db = new KeyV();
+    db = new KeyV("sqlite://:memory:");
 }
 else {
     db = new KeyV("sqlite://keyv.db")

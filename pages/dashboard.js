@@ -87,6 +87,30 @@ function resolve_image_url(image_hash, prefix, size=1024) {
 }
 
 
+class InputModal extends Component {
+    constructor(props) {
+        super(props);
+        this.closeFunction = props.close;
+        this.state = {
+            visible: props.visible
+        };
+    };
+
+    toggle(on=false) {this.setState({visible: on})}
+
+    render() {
+        if(!this.state.visible) {
+            return null;
+        };
+        return (
+            <div className={styles.modal} id={this.props.id||"no-id"}>
+                {this.props.children}
+            </div>
+        )
+    }
+}
+
+
 class ServerSelector extends Component {
     state = {
         failed: false,
@@ -268,6 +292,7 @@ class ManageServer extends Component {
                         }
                     </p>
                 </div>
+                <p>Premium status: <span style={{color: this.state.data.config.premium ? "#57F287" : "#ED4245"}}>{this.state.data.config.premium ? "Active" : "Inactive."}</span></p>
                 </div>
             </div>
         );
@@ -312,7 +337,21 @@ export default class Dashboard extends Component {
             return <ServerSelector parent={this} illegal={this.unusable}/>
         }
         else {
-            return <><ManageServer parent={this} data={this.state.data} guild={this.state.guild}/><hr/><h3>Debug:</h3><pre><code>{JSON.stringify(this.state, null, 2)}</code></pre></>
+            return (
+                <>
+                    <InputModal id={"modal"} visible={true}>
+                        <div className={styles.modalContent}>
+                            <p>Notice: This dashboard is <em>READ ONLY</em>! You CANNOT edit anything here.</p>
+                            <p>If you are a developer and want to help us develop this page, please open a pull request on our repo.</p>
+                            <button className={styles.modalClose} onClick={()=>{document.getElementById("modal").remove()}}>Close</button>
+                        </div>
+                    </InputModal>
+                    <ManageServer parent={this} data={this.state.data} guild={this.state.guild}/>
+                    <hr/>
+                    <h3>Debug:</h3>
+                    <pre><code>{JSON.stringify(this.state, null, 2)}</code></pre>
+                </>
+            )
         }
     }
 }
