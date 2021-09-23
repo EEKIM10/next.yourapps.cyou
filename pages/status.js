@@ -275,10 +275,6 @@ class StatusPage extends Component {
         };
     }
 
-    componentDidUpdate() {
-        document.addEventListener("keydown", this.keyPressEvent(this), {passive: true})
-    }
-
     componentDidMount() {
 
         const _t = this;
@@ -338,7 +334,7 @@ class StatusPage extends Component {
                     <p>StatusPage State:</p>
                     <code><pre>{JSON.stringify(this.state, null, 2)}</pre></code>
                 </div>
-                <div style={{height: "50vh", textAlign: "center"}}>
+                <div style={{height: "50vh", textAlign: "center"}} onKeyDown={this.onKeyDown}>
                     <div style={{display: "flex", justifyContent: "center"}}>
                         {statusBar(this.state.server_online, this.state.stats)}
                     </div>
