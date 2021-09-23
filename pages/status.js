@@ -171,7 +171,7 @@ class StatusPage extends Component {
                         break;
                     }
                     else {
-                        const shard_id = (server_id >> 22) % Object.keys(that.state.data.shard).length
+                        const shard_id = (server_id >> 22) % Object.keys(that.state.data.shards).length
                         alert("Your server is on shard: " + shard_id)
                     }
                     
@@ -191,7 +191,7 @@ class StatusPage extends Component {
         const that = this;
         let response;
         fetch(
-            "https://api.yourapps.cyou/meta/stats"
+            "https://api.yourapps.cyou/meta/stats?system_stats=true"
         )
         .then(
             (response) => {
