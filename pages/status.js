@@ -209,7 +209,7 @@ class StatusPage extends Component {
     fetchBotStatus() {
         const that = this;
         const request = new XMLHttpRequest();
-        request.timeout = 1000;
+        request.timeout = 1999;
         
         function onStateChange(event) {
             if(event.status===4) {
@@ -279,7 +279,7 @@ class StatusPage extends Component {
         function callback(_this) {
             _this.fetchStatusNew()
         }
-        const x = () => this.interval = setInterval(callback, 1100, _t)
+        const x = () => this.interval = setInterval(callback, 2000, _t)
         x()
     }
 
