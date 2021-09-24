@@ -190,14 +190,14 @@ class StatusPage extends Component {
     fetchStats() {
         const that = this;
         const request = new XMLHttpRequest();
-        request.timeout = 1000;  // Kills the request, which means we don't have to handle locks.
+        request.timeout = 1999;  // Kills the request, which means we don't have to handle locks.
         
         function onStateChange(event) {
             if(event.status===4) {
                 if(request.status===200) {
                     if(request.headers["Content-Type"] === "application/json") {
                         const parsed = JSON.parse(request.responseText);
-                        that.setState({stats: parsed})
+                        that.setState({stats: parsed}, didSetState)
                     }
                 };
             };
@@ -217,7 +217,8 @@ class StatusPage extends Component {
                     return that.setState(
                         {
                             server_online: false
-                        }
+                        },
+                        didSetState
                     );
                 };
 
@@ -236,7 +237,8 @@ class StatusPage extends Component {
                             server_online: true,
                             shard_elements: this.state.shard_elements,
                             data: parsed
-                        }
+                        },
+                        didSetState
                     );
                 };
             };
