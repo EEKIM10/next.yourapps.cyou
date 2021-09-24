@@ -343,6 +343,7 @@ class StatusPage extends Component {
                     <meta name="viewport" content="width=device-width, initial-scale=1"/>
                     <meta httpEquiv="Cache-Control" content="max-age=86400"/>
                     <link rel="preconnect" href="https://api.yourapps.cyou"/>
+                    <script onLoad={()=>{twemoji.parse(document.body)}} src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous" async></script> {/* Import twemoji */}
                 </Head>
                 <div id="debug" hidden>
                     <p>StatusPage State:</p>
