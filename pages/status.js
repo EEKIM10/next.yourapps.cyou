@@ -194,7 +194,7 @@ class StatusPage extends Component {
         
         function onStateChange(event) {
             console.debug(JSON.stringify(event, null, 2));
-            if(event.status===4) {
+            if(request.readyState===4) {
                 if(request.status===200) {
                     if(request.headers["Content-Type"] === "application/json") {
                         const parsed = JSON.parse(request.responseText);
@@ -215,7 +215,7 @@ class StatusPage extends Component {
         
         function onStateChange(event) {
             console.debug(JSON.stringify(event, null, 2))
-            if(event.status===4) {
+            if(request.readyState===4) {
                 if(request.status !== 200) {
                     return that.setState(
                         {
