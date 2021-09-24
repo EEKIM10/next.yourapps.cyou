@@ -227,18 +227,18 @@ class StatusPage extends Component {
 
                 if(request.getResponseHeader("Content-Type") === "application/json") {
                     const parsed = JSON.parse(request.responseText);
-                    if(this.state.shard_elements) {
+                    if(that.state.shard_elements) {
                         for(let shard_id of Object.keys(data.shards)) {
-                            this.updateShard(shard_id)
+                            that.updateShard(shard_id)
                         }
                     }
                     else {
-                        this.createShards(data)
+                        that.createShards(data)
                     };
                     that.setState(
                         {
                             server_online: true,
-                            shard_elements: this.state.shard_elements,
+                            shard_elements: that.state.shard_elements,
                             data: parsed
                         },
                         didSetState
