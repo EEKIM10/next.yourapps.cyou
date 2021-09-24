@@ -39,6 +39,10 @@ function statusBar(is_online, data) {
         cpu_percents.push(cpu_core.toLocaleString() + "%")
         cpu_sum += cpu_core
     }
+    let load_averages=[];
+    for(let avg of data.load_averages) {
+        load_averages.push(avg.toLocaleString())
+    }
     return (
         <div className={styles.overallBar} style={{borderColor: colour}}>
             <p>Overall Bot Process Status: <span style={{fontWeight: "bolder", color: colour}}>{status}</span></p>
@@ -58,7 +62,7 @@ function statusBar(is_online, data) {
                         <td>{cpu_percents.join(", ")} ({(cpu_sum / cpu_percents.length).toLocaleString()}% overall)</td>
                         <td>{data.memory.used} used ({data.memory.percent}), {data.memory.free} free</td>
                         <td>{data.disk.used} used ({data.disk.percent}), {data.disk.free} free</td>
-                        <td>{data.load_averages.join(", ")}</td>
+                        <td>{load_averages.join(", ")}</td>
                     </tr>
                 </tbody>
             </table>
