@@ -277,7 +277,7 @@ class StatusPage extends Component {
     componentDidMount() {
         const _t = this;
         function callback(_this) {
-            this.fetchStatusNew()
+            _this.fetchStatusNew()
         }
         const x = () => this.interval = setInterval(callback, 1100, _t)
         x()
