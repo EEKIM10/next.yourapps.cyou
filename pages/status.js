@@ -197,7 +197,7 @@ class StatusPage extends Component {
         request.timeout = 1999;  // Kills the request, which means we don't have to handle locks.
         
         function onStateChange(event) {
-            console.debug(JSON.stringify(event, null, 2));
+            console.debug(JSON.stringify(request, null, 2));
             if(request.readyState===4) {
                 if(request.status===200) {
                     if(request.getResponseHeader("Content-Type") === "application/json") {
@@ -218,7 +218,7 @@ class StatusPage extends Component {
         request.timeout = 1999;
         
         function onStateChange(event) {
-            console.debug(JSON.stringify(event, null, 2))
+            console.debug(JSON.stringify(request, null, 2))
             if(request.readyState===4) {
                 if(request.status !== 200) {
                     return that.setState(
