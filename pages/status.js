@@ -202,6 +202,7 @@ class StatusPage extends Component {
                 };
             };
         };
+        request.onreadystatechange = onStateChange;
         request.open("GET", "https://api.yourapps.cyou/meta/stats?system_stats=true");
         request.send();
     }
@@ -243,6 +244,7 @@ class StatusPage extends Component {
                 };
             };
         };
+        request.onreadystatechange = onStateChange;
         request.open("GET", "https://api.yourapps.cyou/meta/status");
         request.send();   
     }
