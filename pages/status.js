@@ -187,68 +187,67 @@ class StatusPage extends Component {
         }
     }
 
-    async fetchStatus() {
+    fetchStats() {
         const that = this;
-        let response;
-        fetch(
-            "https://api.yourapps.cyou/meta/stats?system_stats=true"
-        )
-        .then(
-            (response) => {
-                if(response.ok) {
-                    response.json().then(
-                        (j) => that.setState({stats: j})
-                    )
-                }
-            }
-        )
-        .catch()
-        try {
-            response = await fetch("https://api.yourapps.cyou/meta/status");
-        }
-        catch (e) {
-            console.error("Network Error.")
-            console.error(e)
-            this.setState(
-                {
-                    server_online: false
-                },
-                didSetState
-            )
-            return;
-        }
-        if(!response.ok||response.status!==200) {
-            this.setState(
-                {
-                    server_online: false
-                },
-                didSetState
-            );
-            return;
-        }
-        else {
-            const data = await response.json();
-            if(data.detail) {
-                this.setState({server_online: false});
-                return
-            }
-            if(this.state.shard_elements) {
-                for(let shard_id of Object.keys(data.shards)) {
-                    this.updateShard(shard_id)
-                }
-            }
-            else {
-                this.createShards(data)
-            }
-            this.setState(
-                {
-                    server_online: true,
-                    data: data,
-                    shard_elements: this.state.shard_elements
-                },
-                didSetState
-            )
-        }
+        const request = new XMLHttpRequest();
+        request.timeout = 1000;  // Kills the request, which means we don't have to handle locks.
+        
+        function onStateChange(event) {
+            if(event.status===4) {
+                if(request.status===200) {
+                    if(request.headers["Content-Type"] === "application/json") {
+                        const parsed = JSON.parse(request.responseText);
+                        that.setState({stats: parsed})
+                    }
+                };
+            };
+        };
+        request.open("GET", "https://api.yourapps.cyou/meta/stats?system_stats=true");
+        request.send();
+    }
+
+    fetchBotStatus() {
+        const that = this;
+        const request = new XMLHttpRequest();
+        request.timeout = 1000;
+        
+        function onStateChange(event) {
+            if(event.status===4) {
+                if(request.status !== 200) {
+                    return that.setState(
+                        {
+                            server_online: false
+                        }
+                    );
+                };
+
+                if(request.headers["Content-Type"] === "application/json") {
+                    const parsed = JSON.parse(request.responseText);
+                    if(this.state.shard_elements) {
+                        for(let shard_id of Object.keys(data.shards)) {
+                            this.updateShard(shard_id)
+                        }
+                    }
+                    else {
+                        this.createShards(data)
+                    };
+                    that.setState(
+                        {
+                            server_online: true,
+                            shard_elements: this.state.shard_elements,
+                            data: parsed
+                        }
+                    );
+                };
+            };
+        };
+        request.open("GET", "https://api.yourapps.cyou/meta/status");
+        request.send();   
+    }
+
+    fetchStatusNew() {
+        this.fetchStats();
+        this.fetchBotStatus();
     }
 
     updateShard(shard_id, new_element) {
@@ -276,23 +275,11 @@ class StatusPage extends Component {
     }
 
     componentDidMount() {
-
         const _t = this;
         function callback(_this) {
-            if(_this.lock===true) {
-                return;
-            };
-            _this.lock = true;
-
-            _this.fetchStatus()
-            .then(
-                () => {_this.lock = false}
-            )
-            .catch(
-                () => {_this.lock = false}
-            )
+            this.fetchStatusNew()
         }
-        const x = () => this.interval = setInterval(callback, 1000, _t)
+        const x = () => {this.interval = setInterval(callback, 1100, _t)}
         x()
     }
 
