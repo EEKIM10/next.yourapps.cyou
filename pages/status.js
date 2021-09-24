@@ -196,7 +196,7 @@ class StatusPage extends Component {
             console.debug(JSON.stringify(event, null, 2));
             if(request.readyState===4) {
                 if(request.status===200) {
-                    if(request.headers["Content-Type"] === "application/json") {
+                    if(request.getResponseHeader("Content-Type") === "application/json") {
                         const parsed = JSON.parse(request.responseText);
                         that.setState({stats: parsed}, didSetState)
                     }
@@ -225,7 +225,7 @@ class StatusPage extends Component {
                     );
                 };
 
-                if(request.headers["Content-Type"] === "application/json") {
+                if(request.getResponseHeader("Content-Type") === "application/json") {
                     const parsed = JSON.parse(request.responseText);
                     if(this.state.shard_elements) {
                         for(let shard_id of Object.keys(data.shards)) {
