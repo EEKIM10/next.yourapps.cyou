@@ -194,7 +194,7 @@ class StatusPage extends Component {
     fetchStats() {
         const that = this;
         const request = new XMLHttpRequest();
-        request.timeout = 1999;  // Kills the request, which means we don't have to handle locks.
+        request.timeout = 2999;  // Kills the request, which means we don't have to handle locks.
         
         function onStateChange(event) {
             console.debug(JSON.stringify(request, null, 2));
@@ -289,8 +289,7 @@ class StatusPage extends Component {
         function callback(_this) {
             _this.fetchStatusNew()
         }
-        const x = () => this.interval = setInterval(callback, 2000, _t)
-        x()
+        this.interval = setInterval(callback, 2000, _t)
     }
 
     renderShards() {
@@ -327,6 +326,23 @@ class StatusPage extends Component {
         }
         return (
             <>
+                <Head>
+                    <title>YourApps Status</title>
+                    <meta charSet="utf-8"/>
+                    <meta property="og:title" content="YourApps - Status"/>
+                    <meta property="og:site_name" content="YourApps"/>
+                    <meta property="og:description"
+                        content="View the live status for YourApps here."
+                    />
+                    <meta property="og:type" content="website"/>
+                    <meta name="theme-color" content="#7289DA"/>
+                    <meta name="description"
+                        content="View the live status for YourApps here."
+                    />
+                    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                    <meta httpEquiv="Cache-Control" content="max-age=86400"/>
+                    <link rel="preconnect" href="https://api.yourapps.cyou"/>
+                </Head>
                 <div id="debug" hidden>
                     <p>StatusPage State:</p>
                     <code><pre>{JSON.stringify(this.state, null, 2)}</pre></code>
