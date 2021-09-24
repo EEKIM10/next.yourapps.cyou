@@ -301,7 +301,7 @@ class StatusPage extends Component {
                 <tr>
                     <td>{shard_id}</td>
                     <td style={{color: _data.online ? "green" : "red"}}>{_data.online ? "yes" : "no"}</td>
-                    <td>{(_data.latency*1000).toLocaleString()}</td>
+                    <td>{(_data.latency*1000).toLocaleString()} {(_data.latency*1000)>120.0 ? "&#x26A0" : ""}</td>
                 </tr>
             )
         }
