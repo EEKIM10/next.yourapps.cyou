@@ -78,6 +78,8 @@ function statusBar(is_online, data, parent) {
                     </tr>
                 </tbody>
             </table>
+            <br/>
+            {_this.state.verbose ? <p>You are currently not processing system statistics, as your internet is slow.</p> : null}
         </div>
     )
 }
@@ -219,7 +221,7 @@ class StatusPage extends Component {
             };
         };
         request.onreadystatechange = onStateChange;
-        request.open("GET", "https://api.yourapps.cyou/meta/stats?system_stats=true");
+        request.open("GET", "https://api.yourapps.cyou/meta/stats?system_stats=" + JSON.stringify(this.state.verbose));
         request.send();
     }
 
