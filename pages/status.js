@@ -353,7 +353,6 @@ class StatusPage extends Component {
                     <meta name="viewport" content="width=device-width, initial-scale=1"/>
                     <meta httpEquiv="Cache-Control" content="max-age=86400"/>
                     <link rel="preconnect" href="https://api.yourapps.cyou"/>
-                    <script onLoad={()=>{twemoji.parse(document.body);console.warn("Parsed twemoji.")}} src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossOrigin="anonymous" defer></script> {/* Import twemoji */}
                 </Head>
                 <div id="debug" hidden>
                     <p>StatusPage State:</p>
@@ -361,7 +360,7 @@ class StatusPage extends Component {
                 </div>
                 <div style={{height: "50vh", textAlign: "center"}} onKeyDown={this.onKeyDown}>
                     <div style={{display: "flex", justifyContent: "center"}}>
-                        {statusBar(this.state.server_online, this.state.stats)}
+                        {statusBar(this.state.server_online, this.state.stats, this)}
                     </div>
                     <hr style={{width: "75%", textAlign: "center"}}/>
                     <h2>Individual shard statuses</h2>
@@ -369,9 +368,6 @@ class StatusPage extends Component {
                         {this.renderShards()}
                     </div>
                 </div>
-                <script>
-                    twemoji.parse(document.body)
-                </script>
             </>
         )
     }
