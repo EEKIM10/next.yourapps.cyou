@@ -55,7 +55,7 @@ function statusBar(is_online, data, parent) {
     const speed = _this.state.verbose ? "Slow Internet?" : "Fast Internet?"
     return (
         <div className={styles.overallBar} style={{borderColor: colour}}>
-            {/* <a onClick={switch_state}>{speed}</a> */}
+            <a onClick={switch_state}>{speed}</a>
             <p>Overall Bot Process Status: <span style={{fontWeight: "bolder", color: colour}}>{status}</span></p>
             <i style={{fontSize: "11px"}}>This status represents if the bot process is even running.</i>
             <hr/>
@@ -90,7 +90,6 @@ class ShardStatus extends Component {
     }
     constructor(props) {
         super(props)
-        console.warn("Created shard", props.shard_id)
         this.shard_id = props.shard_id;
         this.setState({online: props.online, latency: props.latency})
     }
@@ -129,7 +128,7 @@ class ShardStatus extends Component {
     }
 }
 
-const didSetState = () => {console.log("Set State.")}
+const didSetState = () => {console.debug("Set State.")}
 
 
 class StatusPage extends Component {
