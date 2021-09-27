@@ -23,7 +23,7 @@ import styles from '../styles/status.module.css'
 //   }
 
 
-function statusBar(is_online, data) {
+function statusBar(is_online, data, parent) {
     let colour;
     let status;
     if(is_online) {
@@ -44,15 +44,15 @@ function statusBar(is_online, data) {
     for(let avg of data.load_averages) {
         load_averages.push(avg.toLocaleString())
     }
-    // const _this = this;
-    // const switch_state = () => {
-    //     _this.setState(
-    //         {
-    //             verbose: _this.state.verbose
-    //         }
-    //     )
-    // };
-    // const speed = this.state.verbose ? "Slow Internet?" : "Fast Internet?"
+    const _this = parent;
+    const switch_state = () => {
+        _this.setState(
+            {
+                verbose: _this.state.verbose
+            }
+        )
+    };
+    const speed = _this.state.verbose ? "Slow Internet?" : "Fast Internet?"
     return (
         <div className={styles.overallBar} style={{borderColor: colour}}>
             {/* <a onClick={switch_state}>{speed}</a> */}
