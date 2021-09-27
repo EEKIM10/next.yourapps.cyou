@@ -45,17 +45,18 @@ function statusBar(is_online, data, parent) {
         load_averages.push(avg.toLocaleString())
     }
     const _this = parent;
-    const switch_state = () => {
+    const switch_state = (e) => {
+        e.preventDefault();
         _this.setState(
             {
-                verbose: _this.state.verbose
+                verbose: !_this.state.verbose
             }
         )
     };
     const speed = _this.state.verbose ? "Slow Internet?" : "Fast Internet?"
     return (
         <div className={styles.overallBar} style={{borderColor: colour}}>
-            <a onClick={switch_state}>{speed}</a>
+            <a onClick={switch_state} href="#" style={{fontSize: "12px"}}>{speed}</a>
             <p>Overall Bot Process Status: <span style={{fontWeight: "bolder", color: colour}}>{status}</span></p>
             <i style={{fontSize: "11px"}}>This status represents if the bot process is even running.</i>
             <hr/>
