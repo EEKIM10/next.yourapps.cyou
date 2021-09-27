@@ -53,6 +53,27 @@ function statusBar(is_online, data, parent) {
             }
         )
     };
+    let body;
+    if(_this.state.verbose===false) {
+        body = (
+            <tr className={styles.tableRow}>
+                <td>{cpu_percents.join(", ")} ({(cpu_sum / cpu_percents.length).toLocaleString()}% overall)</td>
+                <td>{data.memory.used} used ({data.memory.percent}), {data.memory.free} free</td>
+                <td>{data.disk.used} used ({data.disk.percent}), {data.disk.free} free</td>
+                <td>{load_averages.join(", ")}</td>
+            </tr>
+        )
+    }
+    else {
+        body = (
+            <tr className={styles.tableRow}>
+                <td>N/A</td>
+                <td>N/A</td>
+                <td>N/A</td>
+                <td>N/A</td>
+            </tr>
+        )
+    };
     const speed = _this.state.verbose ? "Slow Internet?" : "Fast Internet?"
     return (
         <div className={styles.overallBar} style={{borderColor: colour}}>
@@ -70,12 +91,7 @@ function statusBar(is_online, data, parent) {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr className={styles.tableRow}>
-                        <td>{cpu_percents.join(", ")} ({(cpu_sum / cpu_percents.length).toLocaleString()}% overall)</td>
-                        <td>{data.memory.used} used ({data.memory.percent}), {data.memory.free} free</td>
-                        <td>{data.disk.used} used ({data.disk.percent}), {data.disk.free} free</td>
-                        <td>{load_averages.join(", ")}</td>
-                    </tr>
+                    {body}
                 </tbody>
             </table>
             <br/>
@@ -173,13 +189,14 @@ class StatusPage extends Component {
         this.interval;
         this.lock = false;
         this.shard_elements = [];
+        this.keyPressEvent = this.keyPressEvent.bind(this);
     }
 
-    keyPressEvent(that) {
+    keyPressEvent() {
         return (e) => {
             switch (e.key) {
                 case "s":
-                    if(!that.state.data.shards) {
+                    if(!this.state.data.shards) {
                         break;
                     }
                     const server_id = prompt("Please enter your server ID to calculate your shard.");
@@ -188,7 +205,7 @@ class StatusPage extends Component {
                         break;
                     }
                     else {
-                        const shard_id = (server_id >> 22) % Object.keys(that.state.data.shards).length
+                        const shard_id = (server_id >> 22) % Object.keys(this.state.data.shards).length
                         alert("Your server is on shard: " + shard_id)
                     }
                     
