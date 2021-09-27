@@ -54,7 +54,7 @@ function statusBar(is_online, data, parent) {
         )
     };
     let body;
-    if(_this.state.verbose===false) {
+    if(_this.state.verbose===true) {
         body = (
             <tr className={styles.tableRow}>
                 <td>{cpu_percents.join(", ")} ({(cpu_sum / cpu_percents.length).toLocaleString()}% overall)</td>
