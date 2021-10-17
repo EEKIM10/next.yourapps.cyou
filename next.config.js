@@ -1,4 +1,4 @@
-require("dotenv").config();
+// require("dotenv").config();
 if(process.env.VERCEL==="1") {
   process.env.DEV = "0";
 }

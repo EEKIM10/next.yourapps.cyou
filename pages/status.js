@@ -23,6 +23,45 @@ import styles from '../styles/status.module.css'
 //   }
 
 
+class Loader extends Component {
+    state = {
+        counter: 0
+    }
+    constructor(props) {
+        super(props);
+        this.parent = props.parent;
+        const _t = this
+        this.interval = setInterval(()=>{_t.shift()}, 500)
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval)
+    }
+
+    shift() {
+        this.setState({counter: this.state.counter + 1})
+    }
+
+    renderDots() { 
+        // I hate node.js and I have no idea how to do this easily.
+        // The python equiv of this function is "."*(counter % 4)
+        let result = "";
+        const dotsRequired = this.state.counter % 4;
+        for(let x=0;x!=dotsRequired;x++) {
+            result += ".";
+        };
+        return result;
+    }
+
+    render() {
+        if(this.parent.state.loadedInitialStatus===true) {
+            return null;
+        }
+        return <p>Loading{this.renderDots()}</p>
+    }
+}
+
+
 function statusBar(is_online, data, parent) {
     let colour;
     let status;
@@ -78,6 +117,7 @@ function statusBar(is_online, data, parent) {
     return (
         <div className={styles.overallBar} style={{borderColor: colour}}>
             <a onClick={switch_state} href="#" style={{fontSize: "12px"}}>{speed}</a>
+            <Loader parent={_this}/>
             <p>Overall Bot Process Status: <span style={{fontWeight: "bolder", color: colour}}>{status}</span></p>
             <i style={{fontSize: "11px"}}>This status represents if the bot process is even running.</i>
             <hr/>
@@ -151,6 +191,7 @@ const didSetState = () => {console.debug("Set State.")}
 
 class StatusPage extends Component {
     state = {
+        loadedInitialStatus: false,
         verbose: true,
         data: {
             shards: {},
@@ -224,9 +265,9 @@ class StatusPage extends Component {
     fetchStats() {
         const that = this;
         const request = new XMLHttpRequest();
-        request.timeout = 2999;  // Kills the request, which means we don't have to handle locks.
+        request.timeout = 7000;  // Kills the request, which means we don't have to handle locks.
         
-        function onStateChange(event) {
+        function onStateChange() {
             console.debug(JSON.stringify(request, null, 2));
             if(request.readyState===4) {
                 if(request.status===200) {
@@ -245,9 +286,9 @@ class StatusPage extends Component {
     fetchBotStatus() {
         const that = this;
         const request = new XMLHttpRequest();
-        request.timeout = 1999;
+        request.timeout = 6000;
         
-        function onStateChange(event) {
+        function onStateChange() {
             console.debug(JSON.stringify(request, null, 2))
             if(request.readyState===4) {
                 if(request.status !== 200) {
@@ -288,6 +329,9 @@ class StatusPage extends Component {
     fetchStatusNew() {
         this.fetchStats();
         this.fetchBotStatus();
+        if(this.state.loadedInitialStatus!==true) {
+            this.setState({loadedInitialStatus: true})
+        }
     }
 
     updateShard(shard_id, new_element) {
@@ -319,7 +363,7 @@ class StatusPage extends Component {
         function callback(_this) {
             _this.fetchStatusNew()
         }
-        this.interval = setInterval(callback, 2000, _t)
+        this.interval = setInterval(callback, 5000, _t)
     }
 
     renderShards() {

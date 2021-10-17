@@ -146,6 +146,19 @@ class ServerSelector extends Component {
     }
 
     render() {
+        if(process.env.VERCEL==="1" || process.env.DEV!=="0") {
+            return (
+                <div style={{border: "1px solid #ba000d", backgroundColor: "#f44336", borderRadius: "12px", padding: "6px"}}>
+                    <h4>The server this website is currently running on does not support the dashboard right now.</h4>
+                    <p>
+                        Check back in a few months. If you're a programmer, you can try running this yourself
+                        by going to our <a href="https://github.com/EEKIM10/next.yourapps.cyou">GitHub</a> repo
+                        and downloading it yourself. You will need an API token for discord, and 
+                        <a href="https://api.yourapps.cyou/docs">YourApps' API</a>
+                    </p>
+                </div>
+            )
+        };
         const parent_this = this.parent;
         if(this.state.failed) {
             return (
