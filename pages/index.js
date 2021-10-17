@@ -29,11 +29,11 @@ class VideoComponent extends Component {
     if(this.state.render) {
       return (
           <video width={"60%"} height={"40%"} style={{"margin": "0", "padding": "0"}} loop autoPlay={true}>
-            <source type={"video/mp4"} src={"/examples/create-app.mp4"}/>
+            <source type={"video/webm"} src={"/examples/create-app.webm"}/>
           </video>
       );
     }
-    return <Image src={'/placeholder.png'} width={"60%"} height={"40%"} style={{"margin": "0", "padding": "0"}} alt={"loading video..."}/>
+    return <Image src={'/placeholder.png'} width={"60%"} height={"40%"} alt={"loading video..."}/>
   }
 }
 
@@ -124,7 +124,7 @@ export default class Home extends Component {
                 </p>
                 <p>The easy setup means you can get your applications ready to go in a matter of minutes!</p>
                 <div style={{textAlign: "center"}}>
-                  <a href={"/examples/create-app.mp4"}>
+                  <a href={"/examples/create-app.webm"}>
                     <VideoComponent/>
                   </a>
                   <p><i>Figure displaying the creation of an application</i></p>
@@ -159,36 +159,30 @@ export default class Home extends Component {
               <div>
                 <h2>Just tell me the features already!</h2>
                 <p>Well, here&apos;s just a few:</p>
-                <div style={{display: "flex", justifyContent: "center", justifyItems: "center", alignItems: "center", alignContent: "center"}}>
-                  <div style={{display: "flex", flexDirection: "row", alignItems: "center", textAlign: "center"}}>
-                    <div>
-                      <div style={{display: "flex", flexDirection: "column"}}>
-                        <div className={styles.shadowBox}>
-                          <h4>Simple, memorable commands</h4>
-                          <p>The commands you use most are easy to remember, with short names & arguments.</p>
-                        </div>
-                        <div className={styles.shadowBox}>
-                          <h4>Powerful flexibility</h4>
-                          <p>YourApps has been pressured and tested in basically all environments known to man -
-                            earth, space, moon, you name it!</p>
-                          <p>Just pulling your leg! However, on a serious note, YourApps has over 1 thousand servers,
-                            all with their own unique configurations and permissions. And YourApps works in all of them!</p>
-                        </div>
-                      </div>
+                <div style={{display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", alignContent: "center"}}>
+                  <div style={{display: "flex", flexDirection: "column", alignSelf: "center"}}>
+                    <div className={styles.shadowBox}>
+                      <h4>Simple, memorable commands</h4>
+                      <p>The commands you use most are easy to remember, with short names & arguments.</p>
                     </div>
-                    <div style={{display: "flex", flexDirection: "column"}}>
-                      <div className={styles.shadowBox}>
-                        <h4>Reliable & Fast</h4>
-                        <p>YourApps is designed to have many redundancies, while still remaining fast.
-                          YourApps is pretty much always ready when you are!</p>
-                      </div>
-                      <div className={styles.shadowBox}>
-                        <h4>Foo bar</h4>
-                        <p>YourApps is designed to do this really cool thing but it actually only kinda does it</p>
-                      </div>
+                    <div className={styles.shadowBox}>
+                      <h4>Powerful flexibility</h4>
+                      <p>YourApps has been pressured and tested in basically all environments known to man -
+                        earth, space, moon, you name it!</p>
+                      <p>Just pulling your leg! However, on a serious note, YourApps has over 1 thousand servers,
+                        all with their own unique configurations and permissions. And YourApps works in all of them!</p>
                     </div>
                   </div>
+                  <div className={styles.shadowBox}>
+                    <h4>Reliable &amp; Fast</h4>
+                    <p>YourApps is designed to have many redundancies, while still remaining fast.
+                      YourApps is pretty much always ready when you are!</p>
                   </div>
+                  <div className={styles.shadowBox}>
+                    <h4>Foo bar</h4>
+                    <p>If there&apos;s infinite multiverses, then there&apos;s a multiverse where the multiverse theory does not exist.</p>
+                  </div>
+                </div>
                 </div>
               </div>
           </main>

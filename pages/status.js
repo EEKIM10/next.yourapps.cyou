@@ -1,5 +1,6 @@
 import { Component } from "react";
-import styles from '../styles/status.module.css'
+import Head from "next/head";
+import styles from "../styles/status.module.css";
 
 // Example data:
 // {
@@ -22,7 +23,46 @@ import styles from '../styles/status.module.css'
 //   }
 
 
-function statusBar(is_online, data) {
+class Loader extends Component {
+    state = {
+        counter: 0
+    }
+    constructor(props) {
+        super(props);
+        this.parent = props.parent;
+        const _t = this
+        this.interval = setInterval(()=>{_t.shift()}, 500)
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval)
+    }
+
+    shift() {
+        this.setState({counter: this.state.counter + 1})
+    }
+
+    renderDots() { 
+        // I hate node.js and I have no idea how to do this easily.
+        // The python equiv of this function is "."*(counter % 4)
+        let result = "";
+        const dotsRequired = this.state.counter % 4;
+        for(let x=0;x!=dotsRequired;x++) {
+            result += ".";
+        };
+        return result;
+    }
+
+    render() {
+        if(this.parent.state.loadedInitialStatus===true) {
+            return null;
+        }
+        return <p>Loading{this.renderDots()}</p>
+    }
+}
+
+
+function statusBar(is_online, data, parent) {
     let colour;
     let status;
     if(is_online) {
@@ -39,8 +79,45 @@ function statusBar(is_online, data) {
         cpu_percents.push(cpu_core.toLocaleString() + "%")
         cpu_sum += cpu_core
     }
+    let load_averages=[];
+    for(let avg of data.load_averages) {
+        load_averages.push(avg.toLocaleString())
+    }
+    const _this = parent;
+    const switch_state = (e) => {
+        e.preventDefault();
+        _this.setState(
+            {
+                verbose: !_this.state.verbose
+            }
+        )
+    };
+    let body;
+    if(_this.state.verbose===true) {
+        body = (
+            <tr className={styles.tableRow}>
+                <td>{cpu_percents.join(", ")} ({(cpu_sum / cpu_percents.length).toLocaleString()}% overall)</td>
+                <td>{data.memory.used} used ({data.memory.percent}), {data.memory.free} free</td>
+                <td>{data.disk.used} used ({data.disk.percent}), {data.disk.free} free</td>
+                <td>{load_averages.join(", ")}</td>
+            </tr>
+        )
+    }
+    else {
+        body = (
+            <tr className={styles.tableRow}>
+                <td>N/A</td>
+                <td>N/A</td>
+                <td>N/A</td>
+                <td>N/A</td>
+            </tr>
+        )
+    };
+    const speed = _this.state.verbose ? "Slow Internet?" : "Fast Internet?"
     return (
         <div className={styles.overallBar} style={{borderColor: colour}}>
+            <a onClick={switch_state} href="#" style={{fontSize: "12px"}}>{speed}</a>
+            <Loader parent={_this}/>
             <p>Overall Bot Process Status: <span style={{fontWeight: "bolder", color: colour}}>{status}</span></p>
             <i style={{fontSize: "11px"}}>This status represents if the bot process is even running.</i>
             <hr/>
@@ -54,14 +131,10 @@ function statusBar(is_online, data) {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr className={styles.tableRow}>
-                        <td>{cpu_percents.join(", ")} ({(cpu_sum / cpu_percents.length).toLocaleString()}% overall)</td>
-                        <td>{data.memory.used} used ({data.memory.percent}), {data.memory.free} free</td>
-                        <td>{data.disk.used} used ({data.disk.percent}), {data.disk.free} free</td>
-                        <td>{data.load_averages.join(", ")}</td>
-                    </tr>
+                    {body}
                 </tbody>
             </table>
+            <br/>
         </div>
     )
 }
@@ -75,7 +148,6 @@ class ShardStatus extends Component {
     }
     constructor(props) {
         super(props)
-        console.warn("Created shard", props.shard_id)
         this.shard_id = props.shard_id;
         this.setState({online: props.online, latency: props.latency})
     }
@@ -114,11 +186,13 @@ class ShardStatus extends Component {
     }
 }
 
-const didSetState = () => {console.log("Set State.")}
+const didSetState = () => {console.debug("Set State.")}
 
 
 class StatusPage extends Component {
     state = {
+        loadedInitialStatus: false,
+        verbose: true,
         data: {
             shards: {},
             cogs: {},
@@ -156,13 +230,14 @@ class StatusPage extends Component {
         this.interval;
         this.lock = false;
         this.shard_elements = [];
+        this.keyPressEvent = this.keyPressEvent.bind(this);
     }
 
-    keyPressEvent(that) {
+    keyPressEvent() {
         return (e) => {
             switch (e.key) {
                 case "s":
-                    if(!that.state.data.shards) {
+                    if(!this.state.data.shards) {
                         break;
                     }
                     const server_id = prompt("Please enter your server ID to calculate your shard.");
@@ -171,7 +246,7 @@ class StatusPage extends Component {
                         break;
                     }
                     else {
-                        const shard_id = (server_id >> 22) % Object.keys(that.state.data.shards).length
+                        const shard_id = (server_id >> 22) % Object.keys(this.state.data.shards).length
                         alert("Your server is on shard: " + shard_id)
                     }
                     
@@ -190,29 +265,32 @@ class StatusPage extends Component {
     fetchStats() {
         const that = this;
         const request = new XMLHttpRequest();
-        request.timeout = 1999;  // Kills the request, which means we don't have to handle locks.
+        request.timeout = 7000;  // Kills the request, which means we don't have to handle locks.
         
-        function onStateChange(event) {
-            if(event.status===4) {
+        function onStateChange() {
+            console.debug(JSON.stringify(request, null, 2));
+            if(request.readyState===4) {
                 if(request.status===200) {
-                    if(request.headers["Content-Type"] === "application/json") {
+                    if(request.getResponseHeader("Content-Type") === "application/json") {
                         const parsed = JSON.parse(request.responseText);
                         that.setState({stats: parsed}, didSetState)
                     }
                 };
             };
         };
-        request.open("GET", "https://api.yourapps.cyou/meta/stats?system_stats=true");
+        request.onreadystatechange = onStateChange;
+        request.open("GET", "https://api.yourapps.cyou/meta/stats?system_stats="+this.state.verbose);
         request.send();
     }
 
     fetchBotStatus() {
         const that = this;
         const request = new XMLHttpRequest();
-        request.timeout = 1999;
+        request.timeout = 6000;
         
-        function onStateChange(event) {
-            if(event.status===4) {
+        function onStateChange() {
+            console.debug(JSON.stringify(request, null, 2))
+            if(request.readyState===4) {
                 if(request.status !== 200) {
                     return that.setState(
                         {
@@ -222,20 +300,20 @@ class StatusPage extends Component {
                     );
                 };
 
-                if(request.headers["Content-Type"] === "application/json") {
+                if(request.getResponseHeader("Content-Type") === "application/json") {
                     const parsed = JSON.parse(request.responseText);
-                    if(this.state.shard_elements) {
-                        for(let shard_id of Object.keys(data.shards)) {
-                            this.updateShard(shard_id)
+                    if(that.state.shard_elements) {
+                        for(let shard_id of Object.keys(parsed.shards)) {
+                            that.updateShard(shard_id)
                         }
                     }
                     else {
-                        this.createShards(data)
+                        that.createShards(parsed)
                     };
                     that.setState(
                         {
                             server_online: true,
-                            shard_elements: this.state.shard_elements,
+                            shard_elements: that.state.shard_elements,
                             data: parsed
                         },
                         didSetState
@@ -243,6 +321,7 @@ class StatusPage extends Component {
                 };
             };
         };
+        request.onreadystatechange = onStateChange;
         request.open("GET", "https://api.yourapps.cyou/meta/status");
         request.send();   
     }
@@ -250,6 +329,9 @@ class StatusPage extends Component {
     fetchStatusNew() {
         this.fetchStats();
         this.fetchBotStatus();
+        if(this.state.loadedInitialStatus!==true) {
+            this.setState({loadedInitialStatus: true})
+        }
     }
 
     updateShard(shard_id, new_element) {
@@ -281,8 +363,7 @@ class StatusPage extends Component {
         function callback(_this) {
             _this.fetchStatusNew()
         }
-        const x = () => this.interval = setInterval(callback, 2000, _t)
-        x()
+        this.interval = setInterval(callback, 5000, _t)
     }
 
     renderShards() {
@@ -293,7 +374,7 @@ class StatusPage extends Component {
                 <tr>
                     <td>{shard_id}</td>
                     <td style={{color: _data.online ? "green" : "red"}}>{_data.online ? "yes" : "no"}</td>
-                    <td>{(_data.latency*1000).toLocaleString()}</td>
+                    <td>{(_data.latency*1000).toLocaleString()} {(_data.latency*1000)>120.0 ? "⚠️" : ""}</td>
                 </tr>
             )
         }
@@ -319,13 +400,30 @@ class StatusPage extends Component {
         }
         return (
             <>
+                <Head>
+                    <title>YourApps Status</title>
+                    <meta charSet="utf-8"/>
+                    <meta property="og:title" content="YourApps - Status"/>
+                    <meta property="og:site_name" content="YourApps"/>
+                    <meta property="og:description"
+                        content="View the live status for YourApps here."
+                    />
+                    <meta property="og:type" content="website"/>
+                    <meta name="theme-color" content="#7289DA"/>
+                    <meta name="description"
+                        content="View the live status for YourApps here."
+                    />
+                    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                    <meta httpEquiv="Cache-Control" content="max-age=86400"/>
+                    <link rel="preconnect" href="https://api.yourapps.cyou"/>
+                </Head>
                 <div id="debug" hidden>
                     <p>StatusPage State:</p>
                     <code><pre>{JSON.stringify(this.state, null, 2)}</pre></code>
                 </div>
                 <div style={{height: "50vh", textAlign: "center"}} onKeyDown={this.onKeyDown}>
                     <div style={{display: "flex", justifyContent: "center"}}>
-                        {statusBar(this.state.server_online, this.state.stats)}
+                        {statusBar(this.state.server_online, this.state.stats, this)}
                     </div>
                     <hr style={{width: "75%", textAlign: "center"}}/>
                     <h2>Individual shard statuses</h2>

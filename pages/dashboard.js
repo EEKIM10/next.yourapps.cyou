@@ -1,7 +1,7 @@
 import { Component } from "react";
-import { Image } from 'next/image';
-import styles from '../styles/Dashboard.module.css';
-import errorBox from '../public/components/errorBox';
+import { Image } from "next/image";
+import styles from "../styles/Dashboard.module.css";
+import errorBox from "../public/components/errorBox";
 
 
 async function fetch_me() {
@@ -146,6 +146,19 @@ class ServerSelector extends Component {
     }
 
     render() {
+        if(process.env.VERCEL==="1" || process.env.DEV!=="0") {
+            return (
+                <div style={{border: "1px solid #ba000d", backgroundColor: "#f44336", borderRadius: "12px", padding: "6px"}}>
+                    <h4>The server this website is currently running on does not support the dashboard right now.</h4>
+                    <p>
+                        Check back in a few months. If you&apos;re a programmer, you can try running this yourself
+                        by going to our <a href="https://github.com/EEKIM10/next.yourapps.cyou">GitHub</a> repo
+                        and downloading it yourself. You will need an API token for discord, and 
+                        <a href="https://api.yourapps.cyou/docs">YourApps&apos; API</a>
+                    </p>
+                </div>
+            )
+        };
         const parent_this = this.parent;
         if(this.state.failed) {
             return (
@@ -248,7 +261,7 @@ class ManageServer extends Component {
 
     formatRole(x) {
         return (
-            <span className={styles.mention} style={{"color": '#'+x.color.toString(16), backgroundColor: "#" + x.color.toString(16) + "33"}} key={x.id}>
+            <span className={styles.mention} style={{"color": "#"+x.color.toString(16), backgroundColor: "#" + x.color.toString(16) + "33"}} key={x.id}>
                 @{x.name}
             </span>
         )

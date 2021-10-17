@@ -49,6 +49,6 @@
     border-bottom: 9vh solid white !important;
     text-align: center;
 }
-/* .tableRow:nth-child(even) {
-    color: #eee
-} */
+.tableRow th, .tableRow td {
+    width: 25%
+}
