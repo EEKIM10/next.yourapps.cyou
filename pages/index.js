@@ -33,7 +33,7 @@ class VideoComponent extends Component {
           </video>
       );
     }
-    return <Image src={'/placeholder.png'} width={"60%"} height={"40%"} style={{"margin": "0", "padding": "0"}} alt={"loading video..."}/>
+    return <Image src={'/placeholder.png'} width={"60%"} height={"40%"} alt={"loading video..."}/>
   }
 }
 
@@ -180,7 +180,7 @@ export default class Home extends Component {
                   </div>
                   <div className={styles.shadowBox}>
                     <h4>Foo bar</h4>
-                    <p>If there's infinite multiverses, then there's a multiverse where the multiverse theory does not exist.</p>
+                    <p>If there&apos;s infinite multiverses, then there&apos;s a multiverse where the multiverse theory does not exist.</p>
                   </div>
                 </div>
                 </div>

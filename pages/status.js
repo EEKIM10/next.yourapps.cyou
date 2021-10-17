@@ -1,6 +1,6 @@
 import { Component } from "react";
 import Head from "next/head";
-import styles from '../styles/status.module.css'
+import styles from "../styles/status.module.css";
 
 // Example data:
 // {
